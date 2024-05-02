@@ -3,10 +3,9 @@
 declare(strict_types=1);
 
 function get_name(object $pdo, string $firstname){
-//40:51
     $query = "SELECT name FROM users WHERE name= :name;";
     $stmt = $pdo->prepare($query);
-    $stmt->bind_param(":name", $firstname);
+    $stmt->bindParam(":name", $firstname);
     $stmt->execute();
 
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -17,7 +16,7 @@ function get_name(object $pdo, string $firstname){
 function get_lastname(object $pdo, string $lastname){
     $query = "SELECT name FROM users WHERE surname = :surname;";
     $stmt = $pdo->prepare($query);
-    $stmt->bind_param(":surname", $lastname);
+    $stmt->bindParam(":surname", $lastname);
     $stmt->execute();
 
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -26,12 +25,28 @@ function get_lastname(object $pdo, string $lastname){
 }
 
 function get_email(object $pdo, string $email){
-    $query = "SELECT name FROM users WHERE email = :email;";
+    $query = "SELECT email FROM users WHERE email = :email;";
     $stmt = $pdo->prepare($query);
-    $stmt->bind_param(":email", $email);
+    $stmt->bindParam(":email", $email);
     $stmt->execute();
 
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     return $result;
+}
+
+function set_user(object $pdo, string $firstname, string $lastname, string $email, string $password){
+    $query = "INSERT INTO users (name, surname, email, password, usertype) VALUES (:name, :surname, :email, :password, 
+                                                                                   :usertype)";
+    $stmt = $pdo->prepare($query);
+
+    $options = [ 'cost' => 12 ];
+    $hashedPassword = password_hash($password, PASSWORD_BCRYPT, $options);
+
+    $stmt->bindParam(":name", $firstname);
+    $stmt->bindParam(":surname", $lastname);
+    $stmt->bindParam(":email", $email);
+    $stmt->bindParam(":password", $hashedPassword);
+    $stmt->bindParam(":client", "client");
+    $stmt->execute();
 }
