@@ -6,9 +6,8 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link href="register.css" rel="stylesheet">
+    <link href="css/register.css" rel="stylesheet">
     <title>Document</title>
-
 </head>
 
 <header>
@@ -23,7 +22,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="home.html">Home</a>
+                        <a class="nav-link active" aria-current="page" href="home.php">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Link</a>
@@ -72,43 +71,41 @@
         <div class="col-md-4">
         </div>
         <div class="col-md-4">
-            <form role="form">
-                <div class="form-group">
-
+            <form id="registerForm" role="form" action="functions/signup.inc.php" method="post">
+                <div class="register-name">
                     <label for="first-name">
                         First Name
                     </label>
-                    <input type="text" class="form-control" id="first-name" />
+                    <input type="text" name="firstname" placeholder="First Name" class="form-control"/>
                 </div>
 
-                <div class="form-group">
+                <div class="register-last-name">
 
                     <label for="last-name">
                         Last Name
                     </label>
-                    <input type="text" class="form-control" id="last-name" />
+                    <input type="text" name="lastname" placeholder="Last Name" class="form-control"/>
                 </div>
 
-                <div class="form-group">
-
+                <div class="register-email">
                     <label for="email">
                         Email address
                     </label>
-                    <input type="email" class="form-control" id="email" />
+                    <input type="email" name="email" placeholder="E-mail" class="form-control"/>
                 </div>
-                <div class="form-group">
+                <div class="register-password">
 
                     <label for="password">
                         Password
                     </label>
-                    <input type="password" class="form-control" id="password" />
+                    <input type="password" name="password" placeholder="Password" class="form-control"/>
                 </div>
 
-                <div class="form-group">
+                <div class="register-confirm-password">
                     <label for="confirm-password">
                         Confirm Password
                     </label>
-                    <input type="password" class="form-control" id="confirm-password" />
+                    <input type="password" name="confirm_password" placeholder="Confirm Password" class="form-control"/>
                 </div>
 
                 <div id="btnContainer">
@@ -132,6 +129,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
 </body>
 
 </html>
