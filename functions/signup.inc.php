@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errors = [];
 
         if (is_input_empty($firstname, $lastname, $email, $pwd, $confirm_password)){
-            $errors["empty_input"] = "Fill in all the fields: firstname: $firstname, lastname: $lastname, email: $email, password: $pwd, confirm_password: $confirm_password";
+            $errors["empty_input"] = "Fill in all the fields";
         }
 
         if (is_email_invalid($email)){
@@ -32,17 +32,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $errors["email_used"] = "E-mail already registered";
         }
 
+        if ($pwd != $confirm_password){
+            $errors["password_not_match"] = "Passwords do not match";
+        }
+
         require_once "config_session.inc.php";
 
         if ($errors){
             $_SESSION["errors_signup"] = $errors;
+
+            $signupData = [
+                "firstname" => $firstname,
+                "lastname" => $lastname,
+                "email" => $email
+            ];
+
+            $_SESSION["signup_data"] = $signupData;
+
             header("location: ../register.php");
             die();
         }
 
         create_user($pdo, $firstname, $lastname, $email, $pwd);
 
-        header("location: ../home.php?signup=success");
+        header("location: ../register.php?signup=success");
 
         $pdo = null;
         $stmt = null;

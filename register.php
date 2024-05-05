@@ -9,7 +9,8 @@ require_once "functions/signup_view.inc.php";
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="css/register.css" rel="stylesheet">
     <title>Slide Kicks Registration</title>
 </head>
@@ -57,7 +58,7 @@ require_once "functions/signup_view.inc.php";
 
 <body>
 
-<div class="container-fluid">
+<div class="registration-form">
     <section id="heading">
         <div class="row">
             <div class="col-md-4">
@@ -76,58 +77,39 @@ require_once "functions/signup_view.inc.php";
         </div>
         <div class="col-md-4">
             <form id="registerForm" role="form" action="functions/signup.inc.php" method="post">
-                <div class="register-name">
-                    <label for="firstname">
-                        First Name
-                    </label>
-                    <input type="text" id="firstname" name="firstname" placeholder="First Name" class="form-control"/>
-                </div>
-
-                <div class="register-last-name">
-                    <label for="lastname">
-                        Last Name
-                    </label>
-                    <input type="text" id="lastname" name="lastname" placeholder="Last Name" class="form-control"/>
-                </div>
-
-                <div class="register-email">
-                    <label for="email">
-                        Email address
-                    </label>
-                    <input type="email" id="email" name="email" placeholder="E-mail" class="form-control"/>
-                </div>
-
-                <div class="register-password">
-                    <label for="pwd">
-                        Password
-                    </label>
-                    <input type="password" id="password" name="pwd" placeholder="Enter Password" class="form-control"/>
-                </div>
-
-                <div class="register-confirm-password">
-                    <label for="confirm_password">
-                        Confirm Password
-                    </label>
-                    <input type="password" id ="confirm_password" name="confirm_password" placeholder="Confirm Password" class="form-control"/>
-                </div>
+                <?php
+                signup_inputs();
+                ?>
 
                 <div id="btnContainer">
                     <button id="registerBtn" type="submit" class="btn btn-primary">
                         Register
                     </button>
                 </div>
-            </form>
 
+                <p><a href="login.php">Already have an account? Sign in</a></p>
+            </form>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4" style="color: red;">
+            <?php
+            check_signup_errors();
+            ?>
         </div>
     </div>
 
 </div>
 
-<?php
-check_signup_errors();
-?>
+<section id="error-reporting">
+    <div class="row">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-4" style="text-align: center">
+
+        </div>
+        <div class="col-md-4">
+        </div>
+    </div>
+</section>
 
 </body>
 
