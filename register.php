@@ -90,7 +90,7 @@ require_once "functions/signup_view.inc.php";
                 <p><a href="login.php">Already have an account? Sign in</a></p>
             </form>
         </div>
-        <div class="col-md-4" style="color: red;">
+        <div id="error-reporting" class="col-md-4" style="color: red;">
             <?php
             check_signup_errors();
             ?>
@@ -98,18 +98,6 @@ require_once "functions/signup_view.inc.php";
     </div>
 
 </div>
-
-<section id="error-reporting">
-    <div class="row">
-        <div class="col-md-4">
-        </div>
-        <div class="col-md-4" style="text-align: center">
-
-        </div>
-        <div class="col-md-4">
-        </div>
-    </div>
-</section>
 
 </body>
 

@@ -1,6 +1,6 @@
 <?php
 require_once "functions/config_session.inc.php";
-require_once "functions/signup_view.inc.php";
+require_once "functions/login_view.inc.php";
 ?>
 <!doctype html>
 <html lang="en">
@@ -76,7 +76,7 @@ require_once "functions/signup_view.inc.php";
         <div class="col-md-4">
         </div>
         <div class="col-md-4">
-            <form id="registerForm" role="form" action="functions/signup.inc.php" method="post">
+            <form id="registerForm" role="form" action="functions/login.inc.php" method="post">
 
                 <div class="register-name">
                     <label for="firstname">
@@ -99,8 +99,14 @@ require_once "functions/signup_view.inc.php";
                 </div>
 
                 <div id="btnContainer">
-                    <button id="registerBtn" type="submit" class="btn btn-primary">
+                    <button id="loginBtn" type="submit" class="btn btn-primary">
                         Login
+                    </button>
+                </div>
+
+                <div id="btnContainer">
+                    <button id="logoutBtn" type="submit" class="btn btn-primary">
+                        Logout
                     </button>
                 </div>
 
@@ -108,7 +114,9 @@ require_once "functions/signup_view.inc.php";
             </form>
         </div>
         <div class="col-md-4">
-
+            <?php
+            check_login_errors();
+            ?>
         </div>
     </div>
 
