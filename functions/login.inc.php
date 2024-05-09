@@ -45,6 +45,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION["user_id"] = $result["id"];
         $_SESSION["user_firstname"] = htmlspecialchars($result["name"]);
 
+        if ($_SESSION['user_firstname']){
+            setcookie("firstname", $_SESSION['user_firstname'], 0, "/");
+        }
+
         $_SESSION["last_regeneration"] = time();
 
         header("Location: ../home.php?login=success");

@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +11,7 @@
     <title>Slide Kicks</title>
 </head>
 <body>
+<script src="js/home.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
 <header>
@@ -39,7 +43,7 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="register.php">Register</a>
+                        <a id="register-link" class="nav-link" href="register.php">Register</a>
                     </li>
                 </ul>
                 <form class="d-flex" role="search">
@@ -54,7 +58,6 @@
 <section class="new-releases-banner">
     <div class="top">
         <div class="row">
-
             <div class="col-md-12">
                 <h1>New Releases</h1>
                 <div id="carouselExample" class="carousel slide">
@@ -114,6 +117,18 @@
 
 
 <main>
+    <div class="test"></div>
+    <script>
+        window.onload = function () {
+            let div = document.createElement("div");
+            div.innerHTML = "Hello";
+            document.body.appendChild(div);
+        }
+    </script>
+
+    <?php
+
+    ?>
 
 </main>
 

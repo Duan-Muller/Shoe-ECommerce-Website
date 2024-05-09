@@ -13,6 +13,7 @@ require_once "functions/signup_view.inc.php";
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="css/register.css" rel="stylesheet">
     <title>Slide Kicks Registration</title>
+
 </head>
 
 <header>
