@@ -11,7 +11,8 @@ session_start();
     <title>Slide Kicks</title>
 </head>
 <body>
-<script src="js/home.js"></script>
+<script src="js/home.js">
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
 <header>
@@ -115,21 +116,8 @@ session_start();
     </div>
 </section>
 
-
 <main>
     <div class="test"></div>
-    <script>
-        window.onload = function () {
-            let div = document.createElement("div");
-            div.innerHTML = "Hello";
-            document.body.appendChild(div);
-        }
-    </script>
-
-    <?php
-
-    ?>
-
 </main>
 
 <footer>

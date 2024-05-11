@@ -51,7 +51,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $_SESSION["last_regeneration"] = time();
 
-        header("Location: ../home.php?login=success");
+        if ($result['user_type'] === "admin"){
+            header("Location: ../admin.php?login=success");
+        }else{
+            header("Location: ../home.php?login=success");
+        }
+
         $pdo = null;
         $stmt = null;
 
