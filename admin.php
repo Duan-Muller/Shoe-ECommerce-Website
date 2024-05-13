@@ -1,3 +1,6 @@
+<?php
+    require_once 'functions/admin_view.inc.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,18 +48,29 @@
 </section>
 
 <main id="main-content" style="padding-top: 50px">
-    <?php
-    require_once 'functions/admin_view.inc.php';
-    echo loadHomeContent();
-    ?>
+    <?php echo loadHomeContent(); ?>
 </main>
-<footer>
-
+<footer id="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <p>&copy; 2024 Slide Kicks. All Rights Reserved.</p>
+            </div>
+        </div>
+    </div>
 </footer>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-
+        //Making nav item active when clicking menu option
+        $(document).ready(function (){
+            $('.nav-link').click(function(){
+                $('.nav-link').removeClass('active');
+                $(this).addClass('active');
+            });
+        })
+        //Switching pages to implement a form of dynamic content
         $('.nav-link').click(function (e){
             e.preventDefault();
 

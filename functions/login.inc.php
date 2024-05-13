@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $_SESSION["last_regeneration"] = time();
 
-        if ($result['user_type'] === "admin"){
+        if ($result['usertype'] === "admin"){
             header("Location: ../admin.php?login=success");
         }else{
             header("Location: ../home.php?login=success");

@@ -2,15 +2,6 @@
 
 declare(strict_types=1);
 
-function check_login()
-{
-    if (isset($_SESSION["user_id"])) {
-        return $_SESSION["user_firstname"];
-    } else {
-        return "";
-    }
-}
-
 function check_login_errors(){
     if (isset($_SESSION["errors_login"])) {
         $errors = $_SESSION["errors_login"];
