@@ -1,4 +1,5 @@
 <?php
+    session_start();
     require_once 'functions/admin_view.inc.php';
 ?>
 <!DOCTYPE html>
@@ -47,18 +48,9 @@
     </nav>
 </section>
 
-<main id="main-content" style="padding-top: 50px">
+<main id="main-content" style="padding-top: 40px; height: 100vh; padding-bottom: 65px;">
     <?php echo loadHomeContent(); ?>
 </main>
-<footer id="footer">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <p>&copy; 2024 Slide Kicks. All Rights Reserved.</p>
-            </div>
-        </div>
-    </div>
-</footer>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
@@ -89,5 +81,6 @@
 
     });
 </script>
+<script src="js/admin.js"></script>
 </body>
 </html>

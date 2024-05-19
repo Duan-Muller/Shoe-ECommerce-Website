@@ -38,7 +38,64 @@ function loadHomeContent(){
 
 function loadProductsContent(){
     return '     
-             <div class="container-fluid">
+            <div class="page-layout products-page">
+                <ul class="nav flex-column bg-dark" style="width: 15%; align-items: center; position: fixed; height: 100%">
+                  <li class="nav-item">
+                    <a id="view-all-products" class="nav-link active" aria-current="page" href="#">View All</a>
+                  </li>
+                  <li class="nav-item">
+                    <div class="nav-link popup" onclick="myFunction()">Add Products
+                       <form class="popuptext" id="myPopup">
+                            <div style="padding:10px 20px;">
+                                <h3>Please sign in</h3>
+                                <label for="un" class="ui-hidden-accessible">Username:</label>
+                                <input type="text" name="user" id="un" value="" placeholder="username" data-theme="a">
+                                <label for="pw" class="ui-hidden-accessible">Password:</label>
+                                <input type="password" name="pass" id="pw" value="" placeholder="password" data-theme="a">
+                                <button type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check">Sign in</button>
+                            </div>
+                        </form>
+                    </div>                 
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Search Product</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                  </li>
+                </ul>
+         
+                 <div class="container-fluid">
+                    <div class="row">                       
+                        <div class="col-md-12">
+                            <div class="table-container" style="margin-left: 15%;">
+                                <table id="products-table" class="table table-hover table-striped">
+                                  <thead>
+                                    <tr>
+                                      <th scope="col">ID</th>
+                                      <th scope="col">Brand</th>
+                                      <th scope="col">Model</th>
+                                      <th scope="col">Size</th>
+                                      <th scope="col">Color</th>
+                                      <th scope="col">Price</th>
+                                      <th scope="col">Image Path</th>
+                                      <th scope="col">Quantity</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>                      
+                    </div>
+                 </div>             
+            </div>                      
+            
+            ';
+}
+
+function loadUsersContent(){
+    return '           
+            <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-1">
                     </div>
@@ -78,68 +135,157 @@ function loadProductsContent(){
                     <div class="col-md-1">
                     </div>
                 </div>
-             </div>
+            </div>
             
-            <section id="product-controls">
+            <section id="user-controls">
                 <div class="container-fluid">
                     <div class="row">
                         <div id="table-buttons" class="col-md-12 text-center">
                             <button type="button" class="btn btn-secondary">View All</button>
-                            <button type="button" class="btn btn-secondary">View Nike</button>
-                            <button type="button" class="btn btn-secondary">View Adidas</button>
-                            <button type="button" class="btn btn-secondary">View Converse</button>
+                            <button type="button" class="btn btn-secondary" id="search-user">Search User</button>
+                            <button type="button" class="btn btn-secondary" id="update-user">Update User</button>
+                            <button type="button" class="btn btn-secondary" id="add-user">Add User</button>
+                            <button type="button" class="btn btn-secondary" id="remove-user">Remove User</button>                          
                         </div>
                     </div>
                 </div>
             </section>
             
-            <section id="add-product">
+            <section id="search-form" class="form"  style="display: none;">
                 <div class="container-fluid">
                     <div class="row" >
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <form role="form">
                                 <div class="form-group">                                 
-                                    <label for="exampleInputEmail1">
-                                        Email address
+                                    <label for="inputBrand">
+                                        Name
                                     </label>
-                                    <input type="email" class="form-control" id="exampleInputEmail1" />
+                                    <input type="text" class="form-control" id="searchName" />
                                 </div>
-                                <div class="form-group">
-                                     
-                                    <label for="exampleInputPassword1">
-                                        Password
+                                
+                                <div class="form-group">                                    
+                                    <label for="inputModel">
+                                        Surname
                                     </label>
-                                    <input type="password" class="form-control" id="exampleInputPassword1" />
+                                    <input type="text" class="form-control" id="searchSurname" />
                                 </div>
-                                <div class="form-group">
-                                     
-                                    <label for="exampleInputFile">
-                                        File input
+                                
+                                <div class="form-group">                                
+                                    <label for="inputSize">
+                                        E-Mail
                                     </label>
-                                    <input type="file" class="form-control-file" id="exampleInputFile" />
-                                    <p class="help-block">
-                                        Example block-level help text here.
-                                    </p>
-                                </div>
-                                <div class="checkbox">
-                                     
-                                    <label>
-                                        <input type="checkbox" /> Check me out
-                                    </label>
-                                </div> 
-                                <button type="submit" class="btn btn-primary">
-                                    Submit
-                                </button>
+                                    <input type="email" class="form-control" id="searchEmail" />
+                                </div>                                                                                                                                                              
                             </form>
                         </div>
+                       <div class="col-md-6 text-right" style="padding-top: 80px">
+                            <button type="submit" class="btn btn-secondary">
+                                Search
+                            </button>
+                       </div>         
                     </div>
                 </div>
             </section>
-            ';
-}
-
-function loadUsersContent(){
-    return "<h1> This is the users</h1>";
+            
+            <section id="add-form" class="form"  style="display: none;">
+                <div class="container-fluid">
+                    <div class="row" >
+                        <div class="col-md-6">
+                            <form role="form">
+                                <div class="form-group">                                 
+                                    <label for="inputBrand">
+                                        Name
+                                    </label>
+                                    <input type="text" class="form-control" id="searchName" />
+                                </div>
+                                
+                                <div class="form-group">                                    
+                                    <label for="inputModel">
+                                        Surname
+                                    </label>
+                                    <input type="text" class="form-control" id="searchSurname" />
+                                </div>
+                                
+                                <div class="form-group">                                
+                                    <label for="inputSize">
+                                        E-Mail
+                                    </label>
+                                    <input type="email" class="form-control" id="searchEmail" />
+                                </div>             
+                                
+                                <div class="form-group">                                
+                                    <label for="inputSize">
+                                        Password
+                                    </label>
+                                    <input type="text" class="form-control" id="searchEmail" />
+                                </div>   
+                                                                                                                                                                                 
+                            </form>
+                        </div>
+                       <div class="col-md-6 text-right" style="padding-top: 80px">
+                            <button type="submit" class="btn btn-secondary">
+                                Search
+                            </button>
+                       </div>         
+                    </div>
+                </div>
+            </section>
+            
+            <section id="remove-form" class="form" style="display: none;">
+                <div class="container-fluid">
+                    <div class="row" >
+                        <div class="col-md-6">
+                            <form role="form">
+                                <div class="form-group">                                 
+                                    <label for="inputBrand">
+                                        Name
+                                    </label>
+                                    <input type="text" class="form-control" id="searchName" />
+                                </div>
+                                
+                                <div class="form-group">                                    
+                                    <label for="inputModel">
+                                        Surname
+                                    </label>
+                                    <input type="text" class="form-control" id="searchSurname" />
+                                </div>
+                                
+                                <div class="form-group">                                
+                                    <label for="inputSize">
+                                        E-Mail
+                                    </label>
+                                    <input type="email" class="form-control" id="searchEmail" />
+                                </div>                                                                                                                                                              
+                            </form>
+                        </div>
+                       <div class="col-md-6 text-right" style="padding-top: 80px">
+                            <button type="submit" class="btn btn-secondary">
+                                Search
+                            </button>
+                       </div>         
+                    </div>
+                </div>
+            </section>
+            
+            <script>
+            $(document).ready(function (){
+                    function hideAllForms(){
+                        $(".form").hide();
+                    }
+                
+                    $("#search-user").click(function (){
+                        hideAllForms();
+                        $("#search-form").toggle();                        
+                    });
+                    
+                    $("#add-user").click(function (){
+                        hideAllForms();
+                        $("#add-form").toggle();                      
+                    });
+                    
+                })
+            </script>
+    ';
 }
 
 function loadOrdersContent(){
