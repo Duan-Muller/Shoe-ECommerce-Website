@@ -94,4 +94,3 @@ function check_signup_errors(){
     }
 
 }
-
