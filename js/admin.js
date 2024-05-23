@@ -1,5 +1,7 @@
 $(document).ready(function () {
 
+    updateProgressBars();
+
     $(document).on('click', '#view-all-products', function () {
         fetchProducts();
     });
@@ -31,12 +33,13 @@ $(document).ready(function () {
                                   <td>${product.price}</td>
                                   <td>${product.image_path}</td>
                                   <td>${product.quantity}</td>
+                                  <td><button class="delete-product-btn" data-product-id="${product.shoe_id}"><i class="fas fa-trash-alt"></i></button></td>  
                               </tr>`;
             $('#products-table tbody').append(row);
         })
     }
 
-    $(document).ready(function () {
+
         //Ajax call to add product to database
         $(document).on('click','#add-product-button',function (){
             let isValid = validateForm();
@@ -45,6 +48,7 @@ $(document).ready(function () {
             }
 
             let formData = new FormData();
+            formData.append('action', 'add_product');
             formData.append('brand', $('#add-brand').val());
             formData.append('model', $('#add-model').val());
             formData.append('size', $('#add-size').val());
@@ -124,9 +128,9 @@ $(document).ready(function () {
             $('#add-quantity').val('');
             $('#add-image').val('');
         }
-    });
 
-    $(document).ready(function () {
+
+
         //Ajax call to search database for given product
         $(document).on('click','#search-product-button',function (){
             searchProducts();
@@ -163,13 +167,40 @@ $(document).ready(function () {
             $('#search-model').val('');
         }
 
-    });
+
+
+
+        $(document).on('click', '.delete-product-btn', function () {
+            const productId = $(this).data('product-id');
+
+            if (confirm('Are you sure you want to delete this product?')) {
+                $.ajax({
+                    url: 'functions/admin_contr.inc.php',
+                    type: 'POST',
+                    data: {
+                        action: 'delete_product',
+                        productId: productId
+                    },
+                    success: function (response) {
+                        toastr.success(response.message,'Product Deleted Successfully');
+                        fetchProducts();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log('Error deleting product: ', error);
+                        toastr.error(error.message,'Error');
+                    }
+                })
+            }
+        });
+
+
+
     //Ajax call to retrieve all users stored in database
-    $(document).ready(function () {
+
         $(document).on('click', '#view-all-users', function () {
             fetchUsers();
         });
-    })
+
 
     function fetchUsers() {
         $.ajax({
@@ -194,14 +225,116 @@ $(document).ready(function () {
                                   <td>${user.name}</td>
                                   <td>${user.surname}</td>
                                   <td>${user.email}</td>
-                                  <td>${user.joined}</td>                                
+                                  <td>${user.joined}</td>          
+                                  <td><button class="edit-user-btn" data-user-id="${user.id}"><i class="fas fa-pencil-alt"></i></button></td>                      
                               </tr>`;
             $('#users-table tbody').append(row);
         })
     }
 
 
+
+    $(document).on('click', '.edit-user-btn', function () {
+        const userId = $(this).data('user-id');
+        const updateUserBtn = $('#update-user-btn');
+
+        updateUserBtn.data('user-id', userId);
+
+        $.ajax({
+            url:'functions/admin_contr.inc.php',
+            type:'GET',
+            data:{
+                action:'get_user',
+                userID: userId
+            },
+            dataType:'json',
+            success: function (data) {
+                $('#edit-name').val(data.name);
+                $('#edit-surname').val(data.surname);
+                $('#edit-email').val(data.email);
+                $('#editUserModal').modal('show');
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error fetching user: ', error);
+                    toastr.error('Failed to fetch user data','Error')
+            }
+        });
+    });
+
+    $(document).on('click','#update-user-btn',function (){
+        const userId = $(this).data('user-id');
+        const name = $('#edit-name').val().trim();
+        const surname = $('#edit-surname').val().trim();
+        const email = $('#edit-email').val().trim();
+
+        $.ajax({
+            url: 'functions/admin_contr.inc.php',
+            type: 'POST',
+            data: {
+                action:'update_user',
+                userID:userId,
+                name:name,
+                surname:surname,
+                email:email
+            },
+            success: function (response) {
+                fetchUsers();
+                $('#editUserModal').modal('hide');
+                toastr.success('User updated successfully','Success');
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error updating user: ', error);
+                    toastr.error('Failed to update user','Error')
+            }
+        })
+
+    })
+
 })
 
+$('.nav-link').click(function (e) {
+    e.preventDefault();
 
+    let page = $(this).attr('href');
 
+    $.ajax({
+        url: 'functions/admin_view.inc.php',
+        type: 'POST',
+        data: { page: page },
+        success: function (response) {
+            $('#main-content').html(response);
+            if (page === 'home') {
+                updateProgressBars(); // Call the updateProgressBars function after updating the content
+            }
+
+        }
+    });
+});
+
+function updateProgressBars() {
+    $('.circular-progress-bar').each(function () {
+        const parentCard = $(this).parent().parent();
+        const cardValue = parentCard.data('value');
+        const maxValue = 1000; // Set your maximum value here
+
+        const percentage = (cardValue / maxValue) * 100;
+        const progressValue = $(this).find('.progress-value');
+        const cardDescription = parentCard.find('.card-description');
+
+        progressValue.text(`${percentage.toFixed(0)}%`);
+
+        const cardId = parentCard.attr('id');
+        if (cardId === 'totalOrders') {
+            cardDescription.text('Amount: ' + cardValue);
+        } else if (cardId === 'totalSales') {
+            cardDescription.text('Sales: R' + cardValue);
+        } else if (cardId === 'amountOfStock') {
+            cardDescription.text('Units: ' + cardValue);
+        } else if (cardId === 'totalUsers') {
+            cardDescription.text('Users: ' + cardValue);
+        }
+
+        const gradient = `conic-gradient(#02B9FFFF ${percentage}%, white ${percentage}% 100%)`;
+        $(this).css('background', gradient);
+    });
+}

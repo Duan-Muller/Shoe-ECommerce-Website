@@ -1,39 +1,62 @@
 <?php
+
+require_once 'admin_model.inc.php';
+
 function loadHomeContent(){
-    return '
-            <div class="container">
+
+    $totalStock = getTotalStock();
+    $totalUsers = getTotalUsers();
+
+    $homeContent ='
+            <div class="container" id="home-content">
               <p class="container-title" style="color: black">Admin Dashboard</p>
             
               <div class="gradient-cards">
-                <div class="card">
+                <div class="card" id="totalOrders" data-value="200">
                   <div class="container-card bg-green-box">
+                    <div class="circular-progress-bar">
+                      <div class="progress-value"></div>
+                    </div>
                     <p class="card-title">Total Orders</p>
                     <p class="card-description">Info here</p>
                   </div>
                 </div>
             
-                <div class="card">
+                <div class="card" id="totalSales" data-value="200">
                   <div class="container-card bg-white-box">
+                    <div class="circular-progress-bar">
+                      <div class="progress-value"></div>
+                    </div>
                     <p class="card-title">Total Sales Amount</p>
                     <p class="card-description">Sales - total cost somehow</p>
                   </div>
                 </div>
             
-                <div class="card">
+                <div class="card" id="amountOfStock" data-value="'.$totalStock.'">
                   <div class="container-card bg-yellow-box">
+                    <div class="circular-progress-bar">
+                      <div class="progress-value"></div>
+                    </div>
                     <p class="card-title">Total Amount of Stock</p>
                     <p class="card-description">Display total somehow</p>
                   </div>
                 </div>
             
-                <div class="card">
+                <div class="card" id="totalUsers" data-value="'.$totalUsers.'">
                   <div class="container-card bg-blue-box">
+                    <div class="circular-progress-bar">
+                      <div class="progress-value"></div>
+                    </div>
                     <p class="card-title">Total Users</p>
                     <p class="card-description">Display total users</p>
                   </div>
                 </div>
               </div>
             </div>';
+
+    $homeContent .='<script>updateProgressBars()</script>';
+
+    return $homeContent;
 }
 
 function loadProductsContent(){
@@ -159,10 +182,7 @@ function loadUsersContent(){
            <ul class="nav flex-column bg-dark" style="width: 15%; align-items: center; position: fixed; height: 100%">
                   <li class="nav-item">
                     <a id="view-all-users" class="nav-link active" aria-current="page" href="#">View All</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="modal" data-bs-target="#addUserModal">Edit User</a>    
-                  </li>
+                  </li>              
                   <li class="nav-item">
                     <a class="nav-link" data-bs-toggle="modal" data-bs-target="#searchUserModal">Search User</a>
                   </li>               
@@ -190,7 +210,7 @@ function loadUsersContent(){
                  </div>        
            </div> 
             
-            <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+            <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -200,26 +220,22 @@ function loadUsersContent(){
                   <div class="modal-body">
                     <form>
                       <div class="mb-3">
-                        <label for="add-name" class="col-form-label">Name:</label>
-                        <input type="text" class="form-control" id="add-name" >
+                        <label for="edit-name" class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="edit-name" >
                       </div>
                       <div class="mb-3">
-                        <label for="add-surname" class="col-form-label">Surname:</label>
-                        <input type="text" class="form-control" id="add-surname" >
+                        <label for="edit-surname" class="col-form-label">Surname:</label>
+                        <input type="text" class="form-control" id="edit-surname" >
                       </div>
                       <div class="mb-3">
-                        <label for="add-email" class="col-form-label">Size:</label>
-                        <input type="text" class="form-control" id="add-email" >
-                      </div>
-                      <div class="mb-3">
-                        <label for="add-password" class="col-form-label">Color</label>
-                        <input type="text" class="form-control" id="add-password" >
-                      </div>              
+                        <label for="edit-email" class="col-form-label">E-Mail:</label>
+                        <input type="text" class="form-control" id="edit-email" >
+                      </div>         
                     </form>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button id="add-product-button" type="button" class="btn btn-primary">Add Product</button>
+                    <button id="update-user-btn" type="button" class="btn btn-primary">Update User</button>
                   </div>
                 </div>
               </div>
