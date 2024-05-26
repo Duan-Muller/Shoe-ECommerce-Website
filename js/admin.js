@@ -39,9 +39,8 @@ $(document).ready(function () {
         })
     }
 
-
-        //Ajax call to add product to database
-        $(document).on('click','#add-product-button',function (){
+    //Ajax call to add product to database
+    $(document).on('click','#add-product-button',function (){
             let isValid = validateForm();
             if (!isValid) {
                 return;
@@ -74,9 +73,9 @@ $(document).ready(function () {
                     toastr.error(error.message,'Error');
                 }
             })
-        })
+    })
 
-        function validateForm(){
+    function validateForm(){
             let isValid = true;
             let brand = $('#add-brand').val().trim();
             // console.log('brand input:',brand);
@@ -116,10 +115,9 @@ $(document).ready(function () {
                 alert('Please upload an image!');
             }
             return isValid;
+    }
 
-        }
-
-        function clearFormFields(){
+    function clearFormFields(){
             $('#add-brand').val('');
             $('#add-model').val('');
             $('#add-size').val('');
@@ -127,63 +125,58 @@ $(document).ready(function () {
             $('#add-price').val('');
             $('#add-quantity').val('');
             $('#add-image').val('');
-        }
+    }
 
+    //Ajax call to search database for given product
+    $(document).on('click','#search-product-button',function (){
+        searchProducts();
+    });
 
+    function searchProducts(){
+        let brand = $('#search-brand').val().trim();
+        let model = $('#search-model').val().trim();
 
-        //Ajax call to search database for given product
-        $(document).on('click','#search-product-button',function (){
-            searchProducts();
-        });
-
-        function searchProducts(){
-            let brand = $('#search-brand').val().trim();
-            let model = $('#search-model').val().trim();
-
-            $.ajax({
-                url: 'functions/admin_contr.inc.php',
-                type: 'GET',
-                data: {
-                    search:true,
-                    brand:brand,
-                    model:model
-                },
-                dataType: 'json',
-                success: function (data) {
-                    updateTable(data);
-                    toastr.success('Search Successful','Success');
-                    $('#searchProductModal').modal('hide');
-                    clearSearchFields();
+        $.ajax({
+            url: 'functions/admin_contr.inc.php',
+            type: 'GET',
+            data: {
+                search:true,
+                brand:brand,
+                model:model
+            },
+            dataType: 'json',
+            success: function (data) {
+                updateTable(data);
+                toastr.success('Search Successful','Success');
+                $('#searchProductModal').modal('hide');
+                clearSearchFields();
                 },
                 error: function (xhr, status, error) {
-                    console.log('Error searching products: ', error);
-                    toastr.error('Search Unsuccessful','Error');
+                console.log('Error searching products: ', error);
+                toastr.error('Search Unsuccessful','Error');
                 }
-            })
-        }
+        })
+    }
 
-        function clearSearchFields(){
-            $('#search-brand').val('');
-            $('#search-model').val('');
-        }
+    function clearSearchFields(){
+        $('#search-brand').val('');
+        $('#search-model').val('');
+    }
 
+    $(document).on('click', '.delete-product-btn', function () {
+        const productId = $(this).data('product-id');
 
-
-
-        $(document).on('click', '.delete-product-btn', function () {
-            const productId = $(this).data('product-id');
-
-            if (confirm('Are you sure you want to delete this product?')) {
-                $.ajax({
-                    url: 'functions/admin_contr.inc.php',
-                    type: 'POST',
-                    data: {
-                        action: 'delete_product',
-                        productId: productId
-                    },
-                    success: function (response) {
-                        toastr.success(response.message,'Product Deleted Successfully');
-                        fetchProducts();
+        if (confirm('Are you sure you want to delete this product?')) {
+            $.ajax({
+                url: 'functions/admin_contr.inc.php',
+                type: 'POST',
+                data: {
+                    action: 'delete_product',
+                    productId: productId
+                },
+                success: function (response) {
+                    toastr.success(response.message,'Product Deleted Successfully');
+                    fetchProducts();
                     },
                     error: function (xhr, status, error) {
                         console.log('Error deleting product: ', error);
@@ -194,13 +187,10 @@ $(document).ready(function () {
         });
 
 
-
     //Ajax call to retrieve all users stored in database
-
-        $(document).on('click', '#view-all-users', function () {
-            fetchUsers();
-        });
-
+    $(document).on('click', '#view-all-users', function () {
+        fetchUsers();
+    });
 
     function fetchUsers() {
         $.ajax({
@@ -231,8 +221,6 @@ $(document).ready(function () {
             $('#users-table tbody').append(row);
         })
     }
-
-
 
     $(document).on('click', '.edit-user-btn', function () {
         const userId = $(this).data('user-id');

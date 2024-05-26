@@ -107,13 +107,6 @@ require_once "functions/login_view.inc.php";
                 <a href="register.php">Don't have an account? Register</a>
             </form>
 
-            <form action="functions/logout.inc.php">
-                <div id="btnContainer">
-                    <button id="logoutBtn" type="submit" class="btn btn-primary">
-                        Logout
-                    </button>
-                </div>
-            </form>
         </div>
         <div class="col-md-4">
             <?php

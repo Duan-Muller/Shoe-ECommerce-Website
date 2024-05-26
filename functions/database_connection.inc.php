@@ -12,4 +12,3 @@
     } catch (PDOException $e) { // Check connection
         die("Connection failed: " . $e->getMessage());
     }
-

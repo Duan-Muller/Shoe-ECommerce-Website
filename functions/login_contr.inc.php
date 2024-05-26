@@ -28,3 +28,14 @@ function is_password_wrong(string $pwd, string $hashedPwd)
         return false;
     }
 }
+
+function get_user_firstname()
+{
+    session_start();
+    echo $_SESSION['user_firstname'] ?? '';
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'get_user_firstname') {
+    get_user_firstname();
+    exit; // Exit the script after outputting the user's first name
+}

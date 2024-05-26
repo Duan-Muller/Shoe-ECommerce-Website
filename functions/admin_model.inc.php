@@ -40,7 +40,7 @@ function addProduct($brand, $model, $size, $color, $price, $image_path, $quantit
 }
 
 function uploadImage($file){
-    $uploadDir = '../img/';
+    $uploadDir = 'img/';
     $uploadFile = $uploadDir . basename($file['name']);
 
     if (!move_uploaded_file($file['tmp_name'], $uploadFile)) {
