@@ -1,42 +1,119 @@
+body {
+    background-color: #f8f9fa;
+}
+
 .navbar{
     padding: 0px;
 }
 
 .col-md-12 > h1{
-    background: url(https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+
     color: aliceblue;
     text-align: center;
 }
 
-.carousel-inner{
-    background: url(https://images.unsplash.com/photo-1585314062340-f1a5a7c9328d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 72%);
+@keyframes slide {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-100%);
+    }
 }
 
-.carousel-inner > .carousel-item > img {
-    margin: auto;
-    object-fit: fill;
-    width: 38% !important;
+.logos {
+    overflow: hidden;
+    padding: 60px 0;
+    background: white;
+    white-space: nowrap;
+    position: relative;
 }
 
-.name {
-    color: aliceblue;
-    margin-left: 5em;
-    margin-top: 1em;
-}
-
-.price{
-    color: aliceblue;
+.logos:before,
+.logos:after {
     position: absolute;
-    top: 40%;
-    right: 15%;
-
+    top: 0;
+    width: 250px;
+    height: 100%;
+    content: "";
+    z-index: 2;
 }
 
-.carousel-inner > .carousel-item > .btn {
-    position: absolute;
-    top: 50%;
-    right: 15%;
-    text-align: center;
-    font-size: larger;
+.logos:before {
+    left: 0;
+}
+
+.logos:after {
+    right: 0;
+}
+
+.logos-slide {
+    display: inline-block;
+    animation: slide 35s infinite linear;
+}
+
+.logos-slide img {
+    height: 180px;
+}
+
+.feature-box {
+    padding: 20px;
+    background-color: #f8f9fa;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+.feature-box i {
+    font-size: 3rem; /* Increase the icon size */
+    color: #007bff;
+    margin-bottom: 1rem;
+}
+
+.feature-box h5 {
+    font-size: 1.5rem; /* Increase the font size for headings */
+}
+
+.feature-box p {
+    font-size: 1rem; /* Increase the font size for paragraphs */
+}
+
+.about-us {
+    background-color: #f8f9fa;
+}
+
+.about-us h2 {
+    margin-bottom: 1.5rem;
+}
+
+.about-us p {
+    margin-bottom: 1rem;
+}
+
+.card-img-top {
+    height: 200px; /* Set the desired height for the images */
+    object-fit: cover; /* This will ensure the image fills the container while maintaining its aspect ratio */
+}
+
+.cart-item {
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+.cart-item .price {
+    font-weight: bold;
+}
+
+.cart-total {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+.cart-total #cart-subtotal {
+    font-weight: bold;
+}
+
+.payment-methods i {
+    font-size: 24px;
+    margin-right: 10px;
 }

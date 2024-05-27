@@ -7,14 +7,14 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="css/home.css">
     <title>Slide Kicks</title>
 </head>
 <body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="js/home.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
 
 <header>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -40,10 +40,14 @@ session_start();
                         <a id="register-link" class="nav-link" href="register.php">Register</a>
                     </li>
                 </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
+                <div class="ms-auto d-flex">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="cartLink">
+                            <i class="bi bi-cart"></i> Cart
+                            <span class="badge badge-pill badge-danger" id="cartCount"></span>
+                        </a>
+                    </li>
+                </div>
             </div>
         </div>
     </nav>
@@ -54,65 +58,82 @@ session_start();
         <div class="top">
             <div class="row">
                 <div class="col-md-12">
-                    <h1>New Releases</h1>
-                    <div id="carouselExample" class="carousel slide">
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <h1 class="name"><u>Nike Air</u></h1>
-                                <h1 class="price">R700</h1>
-                                <button type="button" class="btn btn-outline-success">Buy Now!</button>
-                                <img src="img/air.png" class="d-block w-50" alt="...">
-                            </div>
-
-                            <div class="carousel-item">
-                                <h1 class="name"><u>Nike Blazer</u></h1>
-                                <h1 class="price">R700</h1>
-                                <button type="button" class="btn btn-outline-success">Buy Now!</button>
-                                <img src="img/blazer.png" class="d-block w-50" alt="...">
-                            </div>
-
-                            <div class="carousel-item">
-                                <h1 class="name"><u>Comet Crater</u></h1>
-                                <h1 class="price">R700</h1>
-                                <button type="button" class="btn btn-outline-success">Buy Now!</button>
-                                <img src="img/crater.png" class="d-block w-50" alt="...">
-                            </div>
-
-                            <div class="carousel-item">
-                                <h1 class="name"><u>Space Hippie</u></h1>
-                                <h1 class="price">R700</h1>
-                                <button type="button" class="btn btn-outline-success">Buy Now!</button>
-                                <img src="img/hippie.png" class="d-block w-50" alt="...">
-                            </div>
-
-                            <div class="carousel-item">
-                                <h1 class="name"><u>Nike Air Jordan</u></h1>
-                                <h1 class="price">R700</h1>
-                                <button type="button" class="btn btn-outline-success">Buy Now!</button>
-                                <img src="img/jordan.png" class="d-block w-50" alt="...">
-                            </div>
-
+                    <h1 class="bg-dark">Popular Brands</h1>
+                    <div class="logos">
+                        <div class="logos-slide">
+                            <img src="img/logo-background.png" />
+                            <img src="img/logo-background.png" />
+                            <img src="img/logo-background.png" />
+                            <img src="img/logo-background.png" />
+                            <img src="img/logo-background.png" />
+                            <img src="img/logo-background.png" />
+                            <img src="img/logo-background.png" />
+                            <img src="img/logo-background.png" />
                         </div>
 
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
+                        <div class="logos-slide">
+                            <img src="img/logo-background.png" />
+                            <img src="img/logo-background.png" />
+                            <img src="img/logo-background.png" />
+                            <img src="img/logo-background.png" />
+                            <img src="img/logo-background.png" />
+                            <img src="img/logo-background.png" />
+                            <img src="img/logo-background.png" />
+                            <img src="img/logo-background.png" />
+                        </div>
                     </div>
                 </div>
+            </div>
+    </section>
 
+    <section class="features py-5 bg-dark">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="feature-box text-center bg-light">
+                        <i class="bi bi-truck"></i>
+                        <h5>FREE SHIPPING</h5>
+                        <p>Free worldwide shipping on all orders.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-box text-center">
+                        <i class="bi bi-arrow-clockwise"></i>
+                        <h5>30 DAYS RETURN</h5>
+                        <p>No question return and easy refund in 14 days.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-box text-center">
+                        <i class="bi bi-headset"></i>
+                        <h5>CONTACT US!</h5>
+                        <p>Keep in touch via email and support system.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
+
+    <section class="about-us py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="img/about-us.jpg" alt="About Us" class="img-fluid rounded">
+                </div>
+                <div class="col-md-6">
+                    <h2>About Slide Kicks</h2>
+                    <p>Slide Kicks is a small, locally-owned business that specializes in selling high-quality sneakers and footwear. We are passionate about providing our customers with the latest and greatest in shoe fashion, while also offering exceptional customer service.</p>
+                    <p>Our company was born out of a love for sneakers and a desire to create a unique shopping experience for sneaker enthusiasts. We carefully curate our selection to offer the best brands and styles, ensuring that our customers can find the perfect pair of shoes for any occasion.</p>
+                    <p>At Slide Kicks, we believe in building lasting relationships with our customers. Our knowledgeable and friendly staff is always on hand to provide personalized recommendations and ensure that you find the perfect fit. We are committed to delivering a seamless shopping experience, from the moment you step into our store (or browse our website) until you take your first steps in your new kicks.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </main>
 
-<footer>
-
+<footer class="py-5 bg-dark">
+    <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Slide Kicks 2024</p></div>
 </footer>
 </body>
 </html>

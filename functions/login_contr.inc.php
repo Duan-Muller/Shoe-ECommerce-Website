@@ -39,3 +39,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['act
     get_user_firstname();
     exit; // Exit the script after outputting the user's first name
 }
+
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    if (isset($_GET['action']) && $_GET['action'] == 'check_login') {
+        session_start();
+        $isLoggedIn = isset($_SESSION['user_id']);
+        echo json_encode(['isLoggedIn' => $isLoggedIn]);
+        exit;
+    }
+}
