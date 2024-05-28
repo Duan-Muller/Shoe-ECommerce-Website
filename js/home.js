@@ -12,10 +12,94 @@ function fetchUserFirstName(){
 function updateNavbar(userFirstName) {
     console.log(userFirstName);
     if (userFirstName !== '' && userFirstName !== undefined && userFirstName !== null) {
-        $('#register-link').html(`Welcome ${userFirstName}`).attr('href', 'profile.php');
+        $('#register-link').html(`Welcome ${userFirstName}`).attr('href', '#');
     } else {
         $('#register-link').html('Register').attr('href', 'register.php');
     }
+}
+
+function fetchUserProfile() {
+    $.ajax({
+        url: 'functions/home_contr.inc.php?action=get_user_profile',
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            renderUserProfile(data);
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
+function renderUserProfile(userProfile) {
+    const mainSection = $('main');
+    mainSection.empty(); // Clear the existing content
+
+    const headerSection = $(`
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">User Profile</h1>
+                </div>
+            </div>
+        </header>
+    `);
+    mainSection.append(headerSection);
+
+    // Create a new section to display the user's profile
+    const profileSection = $(`
+             <div class="container">
+                <div class="row">
+                    <div class="col-md-6 offset-md-3">
+                        <div class="card mt-5">
+                            <div class="card-header">
+                                <h4>Details</h4>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>First Name: </strong> ${userProfile.name}</p>
+                                <p><strong>Last Name: </strong> ${userProfile.surname}</p>
+                                <p><strong>Email: </strong> ${userProfile.email}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <form action="functions/logout.inc.php" onsubmit="clearCart(event)">
+                <div id="btnContainer">
+                    <button id="logoutBtn" type="submit" class="btn btn-primary">
+                        Logout
+                    </button>
+                </div>
+            </form>
+    `);
+
+    mainSection.append(profileSection);
+}
+
+function clearCart(event) {
+    event.preventDefault(); // Prevent the form from submitting immediately
+
+    // Send an AJAX request to clear the cart
+    $.ajax({
+        url: 'functions/home_contr.inc.php',
+        type: 'POST',
+        data: {
+            action: 'clear_cart'
+        },
+        success: function(response) {
+            const responseData = JSON.parse(response);
+            console.log(responseData.message);
+            // Redirect to the logout page after clearing the cart
+            window.location.href = 'functions/logout.inc.php';
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+            // Redirect to the logout page even if there's an error
+            window.location.href = 'functions/logout.inc.php';
+        }
+    });
 }
 
 $(document).ready(function() {
@@ -43,6 +127,20 @@ $(document).ready(function() {
     $('#cartLink').on('click', function(e) {
         e.preventDefault();
         fetchCartItems();
+    });
+
+    fetchCartCount();
+
+    $('#register-link').on('click', function(e) {
+        if ($(this).attr('href') === 'register.php') {
+            // User is not logged in, allow the link to navigate to register.php
+            return true; // Return true to allow the default link behavior
+        } else {
+            e.preventDefault();
+            if ($(this).attr('href') === '#') {
+                fetchUserProfile();
+            }
+        }
     });
 
 });
@@ -182,6 +280,15 @@ function showProductModal(product) {
             $('body').append(modal);
             $('#productModal').modal('show');
 
+            modal.on('click', function(e) {
+                const modalContent = $('.modal-content');
+                if (!modalContent.is(e.target) && modalContent.has(e.target).length === 0) {
+                    // Click occurred outside the modal content area
+                    $('#productModal').modal('hide');
+                    $('#productModal').remove();
+                }
+            });
+
             $('#closeModal').on('click', function() {
                 $('#productModal').modal('hide');
                 $('#productModal').remove();
@@ -211,7 +318,7 @@ function showProductModal(product) {
                         $('#addToCartBtn').text('Add to Cart');
                         $('#addToCartBtn').on('click', function() {
                             console.log(product.shoe_id, $('#colorSelect').val(), $('#sizeSelect').val(), $('#quantityInput').val());
-                            addToCart(product.shoe_id, $('#colorSelect').val(), $('#sizeSelect').val(), $('#quantityInput').val());
+                            addToCart(product.shoe_id, $('#colorSelect').val(), $('#sizeSelect').val(), product.price, $('#quantityInput').val(), $('#productImage').attr('src'));
                         });
                     } else {
                         // User is not logged in, disable the "Add to Cart" button
@@ -252,6 +359,7 @@ function fetchCartItems() {
         },
         error: function(xhr, status, error) {
             console.error('Error:', error);
+            toastr.error('Login first');
         }
     });
 }
@@ -279,7 +387,7 @@ function updateCartDisplay(cartItems) {
             <div class="cart-items">
             </div>
             <div class="cart-total">
-                <p>Subtotal: <span id="cart-subtotal">$0.00</span></p>
+                <p>Subtotal: <span id="cart-subtotal">R0.00</span></p>
                 <p>Shipping, taxes, and discounts calculated at checkout.</p>
                 <button class="btn btn-primary">Checkout</button>
                 <p class="mt-3">Secured by Snipcart</p>
@@ -316,7 +424,7 @@ function updateCartDisplay(cartItems) {
                         <p>Size: ${item.size}</p>
                         <p>Quantity: ${item.quantity}</p>
                         <div class="d-flex justify-content-between align-items-center">                         
-                            <button class="btn btn-outline-danger remove-from-cart-btn" data-item-id="${item.id}">Remove</button>
+                            <button class="btn btn-outline-danger remove-from-cart-btn" data-cart-id="${item.cart_id}">Remove</button>
                         </div>
                     </div>
                 </div>
@@ -338,8 +446,8 @@ function updateCartDisplay(cartItems) {
     }
 }
 
-function addToCart(productId, color, size, quantity) {
-    console.log(productId, color, size, quantity);
+function addToCart(productId, color, size, quantity, price, image_path) {
+    console.log(productId, color, size, quantity, price, image_path);
     $.ajax({
         url: 'functions/home_contr.inc.php',
         type: 'POST',
@@ -348,12 +456,20 @@ function addToCart(productId, color, size, quantity) {
             product_id: productId,
             color: color,
             size: size,
-            quantity: quantity
+            quantity: quantity,
+            price: price,
+            image_path: image_path
         },
         success: function(response) {
             const responseData = JSON.parse(response);
             console.log(responseData.message);
-            // You can also update the cart count or display a success message here
+
+            $('#productModal').modal('hide');
+            $('#productModal').remove();
+
+            toastr.success('Product added to cart!');
+
+            fetchCartCount();
         },
         error: function(xhr, status, error) {
             if (xhr.status === 401) {
@@ -365,23 +481,42 @@ function addToCart(productId, color, size, quantity) {
     });
 }
 
+function fetchCartCount() {
+    $.ajax({
+        url: 'functions/home_contr.inc.php',
+        type: 'POST',
+        data: {
+            action: 'get_cart_count'
+        },
+        success: function(response) {
+            const responseData = JSON.parse(response);
+            const cartCount = responseData.cart_count;
+            $('#cartCount').text(cartCount);
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+        }
+    });
+}
+
 $(document).on('click', '.remove-from-cart-btn', function() {
-    const itemId = $(this).data('item-id');
-    removeFromCart(itemId);
+    const cartId = $(this).data('cart-id');
+    removeFromCart(cartId);
 });
 
-function removeFromCart(itemId) {
+function removeFromCart(cartId) {
     $.ajax({
         url: 'functions/home_contr.inc.php',
         type: 'POST',
         data: {
             action: 'remove_from_cart',
-            item_id: itemId
+            cart_id: cartId
         },
         success: function(response) {
             const responseData = JSON.parse(response);
             console.log(responseData.message);
             fetchCartItems(); // Refresh the cart display
+            fetchCartCount();
         },
         error: function(xhr, status, error) {
             console.error('Error:', error);

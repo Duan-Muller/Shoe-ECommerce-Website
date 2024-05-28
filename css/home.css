@@ -94,6 +94,11 @@ body {
     object-fit: cover; /* This will ensure the image fills the container while maintaining its aspect ratio */
 }
 
+.badge {
+    display: inline-block !important;
+    color: black;
+}
+
 .cart-item {
     border: 1px solid #ddd;
     padding: 10px;

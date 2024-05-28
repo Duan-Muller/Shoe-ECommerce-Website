@@ -22,6 +22,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $model = $_GET['model'];
         $variants = getProductVariants($brand, $model);
         die(json_encode($variants));
+    } elseif (isset($_GET['action']) && $_GET['action'] == 'get_user_profile') {
+        session_start();
+        if (isset($_SESSION['user_id'])) {
+            $userId = $_SESSION['user_id'];
+            $userProfile = getUserProfile($userId);
+            if ($userProfile) {
+                die(json_encode($userProfile));
+            } else {
+                http_response_code(404);
+                die(json_encode(['error' => 'User not found']));
+            }
+        } else {
+            http_response_code(401);
+            die(json_encode(['error' => 'Unauthorized']));
+        }
     }
 } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['action']) && $_POST['action'] == 'add_to_cart') {
@@ -32,9 +47,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $color = $_POST['color'];
             $size = $_POST['size'];
             $quantity = $_POST['quantity'];
+            $price = $_POST['price']; // Get the price from the POST data
+            $imagePath = $_POST['image_path']; // Get the image path from the POST data
             $userId = $_SESSION['user_id'];
 
-            $success = addToCart($userId, $productId, $color, $size, $quantity);
+            error_log("Product ID: " . $productId);
+            error_log("Color: " . $color);
+            error_log("Size: " . $size);
+            error_log("Quantity: " . $quantity);
+            error_log("Price: " . $price);
+            error_log("Image Path: " . $imagePath);
+            error_log("User ID: " . $userId);
+
+            $success = addToCart($userId, $productId, $color, $size, $quantity, $price, $imagePath);
             if ($success) {
                 http_response_code(200);
                 die(json_encode(['status' => 'success', 'message' => 'Product added to cart']));
@@ -50,21 +75,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         session_start();
 
-        $itemId = $_POST['item_id'];
+        $cartId = $_POST['cart_id'] ?? null;
         $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
-        if ($userId !== null) {
-            $success = removeFromCart($userId, $itemId);
+        // Log the session data
+        $logData = [
+            'session_data' => $_SESSION,
+            'user_id' => $userId,
+            'cart_id' => $cartId
+        ];
+        error_log(print_r($logData, true));
+
+        if ($userId !== null && $cartId !== null) {
+            $success = removeFromCart($userId, $cartId);
             if ($success) {
                 http_response_code(200);
-                die(json_encode(['status' => 'success', 'message' => 'Item removed from cart']));
+                $response = ['status' => 'success', 'message' => 'Item removed from cart'];
+                echo json_encode($response);
+                exit;
             } else {
                 http_response_code(500);
-                die(json_encode(['status' => 'error', 'message' => 'Failed to remove item from cart']));
+                $response = ['status' => 'error', 'message' => 'Failed to remove item from cart'];
+                echo json_encode($response);
+                exit;
             }
         } else {
             http_response_code(401);
-            die(json_encode(['status' => 'error', 'message' => 'You must be logged in to remove items from the cart.']));
+            $response = ['status' => 'error', 'message' => 'You must be logged in to remove items from the cart.'];
+            echo json_encode($response);
+            exit;
         }
     } elseif (isset($_POST['action']) && $_POST['action'] == 'get_cart_items') {
 
@@ -78,6 +117,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             http_response_code(401);
             die(json_encode(['status' => 'error', 'message' => 'You must be logged in to view the cart.']));
+        }
+    } elseif (isset($_POST['action']) && $_POST['action'] == 'get_cart_count') {
+        session_start();
+
+        $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+
+        if ($userId !== null) {
+            $cartCount = getCartCount($userId);
+            die(json_encode(['cart_count' => $cartCount]));
+        } else {
+            http_response_code(401);
+            die(json_encode(['status' => 'error', 'message' => 'You must be logged in to view the cart.']));
+        }
+    } elseif (isset($_POST['action']) && $_POST['action'] == 'clear_cart') {
+        session_start();
+
+        $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+
+        if ($userId !== null) {
+            $success = clearCart($userId);
+            if ($success) {
+                http_response_code(200);
+                die(json_encode(['status' => 'success', 'message' => 'Cart cleared successfully']));
+            } else {
+                http_response_code(500);
+                die(json_encode(['status' => 'error', 'message' => 'Failed to clear the cart']));
+            }
+        } else {
+            http_response_code(401);
+            die(json_encode(['status' => 'error', 'message' => 'You must be logged in to clear the cart.']));
         }
     }
 }
