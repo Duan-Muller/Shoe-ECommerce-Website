@@ -67,8 +67,8 @@ function renderUserProfile(userProfile) {
             </div>
         
             <form action="functions/logout.inc.php" onsubmit="clearCart(event)">
-                <div id="btnContainer">
-                    <button id="logoutBtn" type="submit" class="btn btn-primary">
+                <div id="btnContainer" style="display: flex;justify-content: center;align-items: center;margin: 50px">
+                    <button id="logoutBtn" type="submit" class="btn btn-primary"">
                         Logout
                     </button>
                 </div>
@@ -389,7 +389,7 @@ function updateCartDisplay(cartItems) {
             <div class="cart-total">
                 <p>Subtotal: <span id="cart-subtotal">R0.00</span></p>
                 <p>Shipping, taxes, and discounts calculated at checkout.</p>
-                <button class="btn btn-primary">Checkout</button>
+                <button class="btn btn-primary" id="checkoutBtn">Checkout</button>
                 <p class="mt-3">Secured by Snipcart</p>
                 <div class="payment-methods">
                     <i class="bi bi-credit-card-fill"></i>
@@ -444,6 +444,17 @@ function updateCartDisplay(cartItems) {
         `);
         cartSection.find('.cart-items').append(emptyCartMessage);
     }
+
+    const checkoutBtn = cartSection.find('#checkoutBtn');
+    checkoutBtn.click(function() {
+        // Check if the checkoutModal already exists and remove it
+        const existingModal = $('#checkoutModal');
+        if (existingModal.length > 0) {
+            existingModal.modal('hide');
+            existingModal.remove();
+        }
+        showCheckoutModal(cartItems);
+    });
 }
 
 function addToCart(productId, color, size, quantity, price, image_path) {
@@ -521,5 +532,273 @@ function removeFromCart(cartId) {
         error: function(xhr, status, error) {
             console.error('Error:', error);
         }
+    });
+}
+
+function showCheckoutModal(cartItems) {
+    const modal = $(`
+        <div class="modal fade" id="checkoutModal" tabindex="-1" role="dialog" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="checkoutModalLabel">Cart Summary</h5>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Cart summary goes here -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="confirmCheckoutBtn">Confirm Checkout</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `);
+
+    $('body').append(modal);
+    $('#checkoutModal').modal('show');
+
+    // Populate the cart summary in the modal body
+    const modalBody = modal.find('.modal-body');
+    let totalPrice = 0;
+    cartItems.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        totalPrice += itemTotal;
+        const itemHTML = `
+            <div class="cart-item">
+                <div class="row">
+                    <div class="col-md-3">
+                        <img src="${item.image_path}" alt="${item.model}" class="img-fluid">
+                    </div>
+                    <div class="col-md-9">
+                        <h5>${item.brand} ${item.model}</h5>
+                        <p>Color: ${item.color}</p>
+                        <p>Size: ${item.size}</p>
+                        <p>Quantity: ${item.quantity}</p>
+                        <p>Price: R${item.price}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        modalBody.append(itemHTML);
+    });
+
+    const totalHTML = `
+        <div class="cart-total">
+            <h5>Total: R${totalPrice.toFixed(2)}</h5>
+        </div>
+    `;
+    modalBody.append(totalHTML);
+
+    $('#confirmCheckoutBtn').on('click', function() {
+        $('#checkoutModal').modal('hide');
+        showPaymentModal();
+    });
+
+    // Handle modal close button click
+    modal.find('.btn-secondary').click(function() {
+        $('#checkoutModal').modal('hide');
+        $('#checkoutModal').remove();
+    });
+
+    // Handle background click to close the modal
+    modal.on('click', function(e) {
+        if (e.target === this) {
+            $('#checkoutModal').modal('hide');
+            $('#checkoutModal').remove();
+        }
+    });
+}
+
+function showPaymentModal() {
+    const modal = $(`
+        <div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="paymentModalLabel">Payment</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form id="paymentForm">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6><strong>Billing Info</strong></h6>
+                                    <div class="form-group">
+                                        <label for="fullNameInput">Full Name:</label>
+                                        <input type="text" class="form-control" id="fullNameInput" placeholder="Enter Your Full Name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="emailInput">Email:</label>
+                                        <input type="email" class="form-control" id="emailInput" placeholder="Enter Email Address">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="addressInput">Address:</label>
+                                        <textarea class="form-control" id="addressInput" rows="3" placeholder="Enter Address"></textarea>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col">
+                                            <label for="cityInput">City:</label>
+                                            <input type="text" class="form-control" id="cityInput" placeholder="Enter City">
+                                        </div>
+                                        <div class="col">
+                                            <label for="provinceInput">Province:</label>
+                                            <input type="text" class="form-control" id="provinceInput" placeholder="Enter Province">
+                                        </div>
+                                        <div class="col">
+                                            <label for="zipInput">Zip Code:</label>
+                                            <input type="text" class="form-control" id="zipInput" placeholder="123456">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6><strong>Payment</strong></h6>
+                                    <div class="form-group">
+                                        <label>Cards Accepted:</label>
+                                        <div class="payment-icons">
+                                            <i class="bi bi-credit-card-fill"></i>
+                                            <i class="bi bi-paypal"></i>
+                                            <i class="fab fa-cc-visa"></i>
+                                            <i class="fab fa-cc-mastercard"></i>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cardNumberInput">Credit Card Number:</label>
+                                        <input type="text" class="form-control" id="cardNumberInput" placeholder="**** **** **** 4444">
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col">
+                                            <label for="expiryMonthInput">Exp Month:</label>
+                                            <select class="form-control" id="expiryMonthInput">
+                                                <option value="">Choose Month</option>
+                                                <option value="01">01</option>
+                                                <option value="02">02</option>
+                                                <option value="03">03</option>
+                                                <option value="04">04</option>
+                                                <option value="05">05</option>
+                                                <option value="06">06</option>
+                                                <option value="07">07</option>
+                                                <option value="08">08</option>
+                                                <option value="09">09</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
+                                            </select>
+                                        </div>
+                                        <div class="col">
+                                            <label for="expiryYearInput">Exp Year:</label>
+                                            <select class="form-control" id="expiryYearInput">
+                                                <option value="">Choose Year</option>
+                                                <option value="2023">2023</option>
+                                                <option value="2024">2024</option>
+                                                <option value="2025">2025</option>
+                                                <option value="2026">2026</option>
+                                                <option value="2027">2027</option>
+                                                <option value="2028">2028</option>
+                                                <option value="2029">2029</option>
+                                            </select>
+                                        </div>
+                                        <div class="col">
+                                            <label for="cvvInput">CVV:</label>
+                                            <input type="text" class="form-control" id="cvvInput" placeholder="123">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success btn-block" id="confirmPaymentBtn">Confirm Payment</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `);
+
+    $('body').append(modal);
+    $('#paymentModal').modal('show');
+
+    // Handle payment submission
+    $('#confirmPaymentBtn').on('click', function() {
+        // Retrieve the form data
+        const fullName = $('#fullNameInput').val();
+        const email = $('#emailInput').val();
+        const address = $('#addressInput').val();
+        const city = $('#cityInput').val();
+        const province = $('#provinceInput').val();
+        const zipCode = $('#zipInput').val();
+
+        // Retrieve the cart items
+        $.ajax({
+            url: 'functions/home_contr.inc.php',
+            type: 'POST',
+            data: {
+                action: 'get_cart_items'
+            },
+            success: function(cartItemsData) {
+                const cartItems = JSON.parse(cartItemsData);
+
+                // Calculate the total price
+                let totalPrice = 0;
+                cartItems.forEach(item => {
+                    totalPrice += item.price * item.quantity;
+                });
+
+                // Send the order data to the server
+                $.ajax({
+                    url: 'functions/process_order_contr.inc.php',
+                    type: 'POST',
+                    data: {
+                        fullName: fullName,
+                        email: email,
+                        address: address,
+                        city: city,
+                        province: province,
+                        zipCode: zipCode,
+                        totalPrice: totalPrice,
+                        cartItems: JSON.stringify(cartItems)
+                    },
+                    success: function(response) {
+                        // Handle successful order placement
+                        $('#paymentModal').modal('hide');
+
+                                // Create a new modal to show the thank you message
+                        const thankYouModal = $(`
+                                    <div class="modal fade" id="thankYouModal" tabindex="-1" role="dialog" aria-labelledby="thankYouModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="thankYouModalLabel">Thank You!</h5>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Thank you for your order!</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="homeRedirectBtn">Back to Home</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                        `);
+
+                        $('body').append(thankYouModal);
+                        $('#thankYouModal').modal('show');
+
+                        // Handle the "Back to Home" button click
+                        $('#homeRedirectBtn').on('click', function() {
+                            window.location.href = 'home.php';
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle order placement error
+                        console.error('Order error:', error);
+                        // Show an error message to the user
+                    }
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
     });
 }
