@@ -6,14 +6,16 @@ function loadHomeContent(){
 
     $totalStock = getTotalStock();
     $totalUsers = getTotalUsers();
+    $totalSales = getTotalSales();
+    $totalOrders = getTotalOrders();
 
     $homeContent ='
             <div class="container" id="home-content">
               <p class="container-title" style="color: black">Admin Dashboard</p>
             
               <div class="gradient-cards">
-                <div class="card" id="totalOrders" data-value="200">
-                  <div class="container-card bg-green-box">
+                <div class="card" id="totalOrders" data-value="'.$totalOrders.'">
+                  <div class="container-card bg-green-box d-flex flex-column align-items-center">
                     <div class="circular-progress-bar">
                       <div class="progress-value"></div>
                     </div>
@@ -22,8 +24,8 @@ function loadHomeContent(){
                   </div>
                 </div>
             
-                <div class="card" id="totalSales" data-value="200">
-                  <div class="container-card bg-white-box">
+                <div class="card" id="totalSales" data-value="'.$totalSales.'">
+                  <div class="container-card bg-white-box d-flex flex-column align-items-center">
                     <div class="circular-progress-bar">
                       <div class="progress-value"></div>
                     </div>
@@ -33,7 +35,7 @@ function loadHomeContent(){
                 </div>
             
                 <div class="card" id="amountOfStock" data-value="'.$totalStock.'">
-                  <div class="container-card bg-yellow-box">
+                  <div class="container-card bg-yellow-box d-flex flex-column align-items-center">
                     <div class="circular-progress-bar">
                       <div class="progress-value"></div>
                     </div>
@@ -43,7 +45,7 @@ function loadHomeContent(){
                 </div>
             
                 <div class="card" id="totalUsers" data-value="'.$totalUsers.'">
-                  <div class="container-card bg-blue-box">
+                  <div class="container-card bg-blue-box d-flex flex-column align-items-center">
                     <div class="circular-progress-bar">
                       <div class="progress-value"></div>
                     </div>
@@ -64,13 +66,22 @@ function loadProductsContent(){
             <div class="page-layout products-page">
                 <ul class="nav flex-column bg-dark" style="width: 15%; align-items: center; position: fixed; height: 100%">
                   <li class="nav-item">
-                    <a id="view-all-products" class="nav-link active" aria-current="page" href="#">View All</a>
+                    <a id="view-all-products" class="nav-link active" aria-current="page" href="#">
+                        <i class="fas fa-list"></i>
+                        <span>View All</span>
+                    </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="modal" data-bs-target="#addProductModal">Add Product</a>    
+                    <a class="nav-link" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                        <i class="fas fa-plus"></i>
+                        <span>Add Product</span>
+                    </a>                       
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="modal" data-bs-target="#searchProductModal">Search Product</a>
+                    <a class="nav-link" data-bs-toggle="modal" data-bs-target="#searchProductModal">
+                        <i class="fas fa-search"></i>
+                        <span>Search Product</span>
+                    </a>
                   </li>               
                 </ul>
          
@@ -78,21 +89,23 @@ function loadProductsContent(){
                     <div class="row">                       
                         <div class="col-md-12">
                             <div class="table-container" style="margin-left: 15%;">
-                                <table id="products-table" class="table table-hover table-striped">
-                                  <thead>
-                                    <tr>
-                                      <th scope="col">ID</th>
-                                      <th scope="col">Brand</th>
-                                      <th scope="col">Model</th>
-                                      <th scope="col">Size</th>
-                                      <th scope="col">Color</th>
-                                      <th scope="col">Price</th>
-                                      <th scope="col">Image Path</th>
-                                      <th scope="col">Quantity</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody></tbody>
-                                </table>
+                                <div class="table-responsive">
+                                    <table id="products-table" class="table table-hover table-striped">
+                                      <thead>
+                                        <tr>
+                                          <th scope="col">ID</th>
+                                          <th scope="col">Brand</th>
+                                          <th scope="col">Model</th>
+                                          <th scope="col">Size</th>
+                                          <th scope="col">Color</th>
+                                          <th scope="col">Price</th>
+                                          <th scope="col">Image Path</th>
+                                          <th scope="col">Quantity</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody></tbody>
+                                    </table>                            
+                                </div>                              
                             </div>
                         </div>                      
                     </div>
@@ -181,10 +194,16 @@ function loadUsersContent(){
           <div class="page-layout users-page">
            <ul class="nav flex-column bg-dark" style="width: 15%; align-items: center; position: fixed; height: 100%">
                   <li class="nav-item">
-                    <a id="view-all-users" class="nav-link active" aria-current="page" href="#">View All</a>
+                    <a id="view-all-users" class="nav-link active" aria-current="page" href="#">
+                        <i class="fas fa-list"></i>
+                        <span>View All</span>
+                    </a>
                   </li>              
                   <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="modal" data-bs-target="#searchUserModal">Search User</a>
+                    <a class="nav-link" data-bs-toggle="modal" data-bs-target="#searchUserModal">
+                        <i class="fas fa-search"></i>
+                        <span>Search User</span>
+                    </a>
                   </li>               
                 </ul>
            
@@ -192,18 +211,20 @@ function loadUsersContent(){
                     <div class="row">                       
                         <div class="col-md-12">
                             <div class="table-container" style="margin-left: 15%;">
-                                <table id="users-table" class="table table-hover table-striped">
-                                  <thead>
-                                    <tr>
-                                      <th scope="col">ID</th>
-                                      <th scope="col">Name</th>
-                                      <th scope="col">Surname</th>
-                                      <th scope="col">Email</th>
-                                      <th scope="col">Date Joined</th>                                   
-                                    </tr>
-                                  </thead>
-                                  <tbody></tbody>
-                                </table>
+                                <div class="table-responsive">
+                                    <table id="users-table" class="table table-hover table-striped">
+                                      <thead>
+                                        <tr>
+                                          <th scope="col">ID</th>
+                                          <th scope="col">Name</th>
+                                          <th scope="col">Surname</th>
+                                          <th scope="col">Email</th>
+                                          <th scope="col">Date Joined</th>                                   
+                                        </tr>
+                                      </thead>
+                                      <tbody></tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>                      
                     </div>
@@ -240,13 +261,131 @@ function loadUsersContent(){
                 </div>
               </div>
             </div>
-                            
-          
     ';
 }
 
 function loadOrdersContent(){
-    return "<h1> This is the orders</h1>";
+    return '           
+          <div class="page-layout orders-page">
+           <ul class="nav flex-column bg-dark" style="width: 15%; align-items: center; position: fixed; height: 100%">
+                  <li class="nav-item">
+                    <a id="view-all-orders" class="nav-link active" aria-current="page" href="#">
+                        <i class="fas fa-list"></i>
+                        <span>View All</span>
+                    </a>
+                  </li>       
+                  <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="modal" data-bs-target="#searchOrderModal">
+                        <i class="fas fa-search"></i>
+                        <span>Search Order</span>
+                    </a>
+                  </li>                    
+           </ul>
+           
+            <div class="container-fluid">
+                    <div class="row">                       
+                        <div class="col-md-12">
+                            <div class="table-container" style="margin-left: 15%;">
+                                <div class="table-responsive">
+                                    <table id="orders-table" class="table table-hover table-striped">
+                                      <thead>
+                                        <tr>
+                                          <th scope="col">Order ID</th>
+                                          <th scope="col">User ID</th>
+                                          <th scope="col">Full Name</th>
+                                          <th scope="col">Email</th>
+                                          <th scope="col">Address</th>      
+                                          <th scope="col">City</th>
+                                          <th scope="col">Province</th>
+                                          <th scope="col">Zip</th>     
+                                          <th scope="col">Total Price</th>
+                                          <th scope="col">Order Date</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="table-container" style="margin-left: 15%; margin-top: 1%">
+                                <div class="table-responsive">
+                                    <table id="order-items-table" class="table table-hover table-striped">
+                                      <thead>
+                                        <tr>
+                                          <th scope="col">Order Item ID</th>
+                                          <th scope="col">Order ID</th>
+                                          <th scope="col">Shoe ID</th>
+                                          <th scope="col">Color</th>
+                                          <th scope="col">Size</th>      
+                                          <th scope="col">Quantity</th>
+                                          <th scope="col">Unit Price</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>                      
+                    </div>
+            </div>       
+           </div> 
+           
+            <div class="modal fade" id="searchOrderModal" tabindex="-1" aria-labelledby="searchOrderModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="searchOrderModalLabel">Search Order</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form>
+                      <div class="mb-3">
+                        <label for="edit-name" class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="edit-name" >
+                      </div>
+                      <div class="mb-3">
+                        <label for="edit-surname" class="col-form-label">Surname:</label>
+                        <input type="text" class="form-control" id="edit-surname" >
+                      </div>
+                      <div class="mb-3">
+                        <label for="edit-email" class="col-form-label">E-Mail:</label>
+                        <input type="text" class="form-control" id="edit-email" >
+                      </div>         
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="update-user-btn" type="button" class="btn btn-primary">Update User</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="modal fade" id="productDetailsModal" tabindex="-1" aria-labelledby="productDetailsModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="productDetailsModalLabel">Product Details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <img id="product-image" src="" alt="Product Image" class="img-fluid">
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Brand: <span id="product-brand"></span></h5>
+                                    <h5>Model: <span id="product-model"></span></h5>
+                                    <h5>Size: <span id="product-size"></span></h5>
+                                    <h5>Color: <span id="product-color"></span></h5>
+                                    <h5>Price: <span id="product-price"></span></h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    ';
 }
 
 if (isset($_POST['page'])){

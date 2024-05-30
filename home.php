@@ -43,12 +43,12 @@ session_start();
                     </li>
                 </ul>
                 <div class="ms-auto d-flex">
-                    <li class="nav-item">
+                    <ul class="nav-item">
                         <a class="nav-link" href="#" id="cartLink">
                             <i class="bi bi-cart"></i> Cart
                             <span class="badge badge-pill badge-danger" id="cartCount"></span>
                         </a>
-                    </li>
+                    </ul>
                 </div>
             </div>
         </div>

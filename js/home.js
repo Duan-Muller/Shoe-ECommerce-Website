@@ -390,7 +390,7 @@ function updateCartDisplay(cartItems) {
                 <p>Subtotal: <span id="cart-subtotal">R0.00</span></p>
                 <p>Shipping, taxes, and discounts calculated at checkout.</p>
                 <button class="btn btn-primary" id="checkoutBtn">Checkout</button>
-                <p class="mt-3">Secured by Snipcart</p>
+                <p class="mt-3">Secured by Snap-cart</p>
                 <div class="payment-methods">
                     <i class="bi bi-credit-card-fill"></i>
                     <i class="bi bi-paypal"></i>
@@ -762,7 +762,7 @@ function showPaymentModal() {
                         // Handle successful order placement
                         $('#paymentModal').modal('hide');
 
-                                // Create a new modal to show the thank you message
+
                         const thankYouModal = $(`
                                     <div class="modal fade" id="thankYouModal" tabindex="-1" role="dialog" aria-labelledby="thankYouModalLabel" aria-hidden="true">
                                         <div class="modal-dialog" role="document">

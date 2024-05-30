@@ -18,6 +18,24 @@ function getTotalUsers(){
     return $result['total_users'];
 }
 
+function getTotalSales()
+{
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT SUM(total_price) as total_sales FROM orders");
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result['total_sales'];
+}
+
+function getTotalOrders()
+{
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT COUNT(*) as total_orders FROM orders");
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result['total_orders'];
+}
+
 function getAllProducts() {
     global $pdo;
     $stmt = $pdo->prepare("SELECT * FROM shoes");
@@ -92,5 +110,28 @@ function getUserById($userId)
     global $pdo;
     $stmt = $pdo->prepare("SELECT name,surname,email FROM users WHERE id = ?");
     $stmt->execute([$userId]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+function getOrders(){
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT * FROM orders");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getOrderItems()
+{
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT * FROM order_items");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getProductDetailsModal($shoeId)
+{
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT brand, model, size, color, price, image_path FROM shoes WHERE shoe_id = ?");
+    $stmt->execute([$shoeId]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }

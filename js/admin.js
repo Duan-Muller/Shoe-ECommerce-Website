@@ -278,6 +278,135 @@ $(document).ready(function () {
 
     })
 
+    $(document).on('click', '#view-all-orders', function () {
+        fetchOrdersAndItems();
+    });
+
+    $(document).on('click', '#orders-table tbody tr', function () {
+        const orderId = $(this).find('th').text();
+        highlightSelectedRow(this);
+        filterOrderItems(orderId);
+    });
+
+    $(document).on('click', '#order-items-table tbody tr', function () {
+        const shoeId = $(this).find('td:nth-child(3)').text();
+        getProductDetails(shoeId);
+    });
+
+    function highlightSelectedRow(row) {
+        $('#orders-table tbody tr').removeClass('selected');
+        $(row).addClass('selected');
+    }
+
+    function filterOrderItems(orderId) {
+        $('#order-items-table tbody tr').each(function () {
+            const orderItemOrderId = $(this).find('td:nth-child(2)').text();
+            if (orderItemOrderId === orderId) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    }
+
+    function fetchOrdersAndItems() {
+        $.ajax({
+            url: 'functions/admin_contr.inc.php?action=get_orders_and_items',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                updateOrderTable(data.orders);
+                updateOrderItemsTable(data.items);
+            },
+            error: function (xhr, status, error) {
+                console.log('Error fetching orders and items: ', error);
+            }
+        });
+    }
+
+    function updateOrderTable(orders) {
+        $('#orders-table tbody').empty();
+
+        $.each(orders, function (index, order) {
+            let row = `<tr>
+                                  <th scope="row">${order.order_id}</th>
+                                  <td>${order.user_id}</td>
+                                  <td>${order.full_name}</td>
+                                  <td>${order.email}</td>
+                                  <td>${order.address}</td>
+                                  <td>${order.city}</td>
+                                  <td>${order.province}</td>
+                                  <td>${order.zip_code}</td>  
+                                  <td>${order.total_price}</td>
+                                  <td>${order.order_date}</td>        
+                              </tr>`;
+            $('#orders-table tbody').append(row);
+        })
+    }
+
+    function updateOrderItemsTable(items) {
+        $('#order-items-table tbody').empty();
+
+        $.each(items, function (index, item) {
+            let row = `<tr>
+                                  <th scope="row">${item.order_item_id}</th>
+                                  <td>${item.order_id}</td>
+                                  <td>${item.shoe_id}</td>
+                                  <td>${item.color}</td>
+                                  <td>${item.size}</td>
+                                  <td>${item.quantity}</td>
+                                  <td>${item.price}</td>
+                              </tr>`;
+            $('#order-items-table tbody').append(row);
+        })
+    }
+
+    function getProductDetails(shoeId) {
+        $.ajax({
+            url: 'functions/admin_contr.inc.php',
+            type: 'GET',
+            data: {
+                action: 'get_product_details',
+                shoeId: shoeId
+            },
+            dataType: 'json',
+            success: function (product) {
+                updateProductDetailsModal(product);
+                $('#productDetailsModal').modal('show');
+            },
+            error: function (xhr, status, error) {
+                console.log('Error fetching product details: ', error);
+            }
+        });
+    }
+
+    function updateProductDetailsModal(product) {
+        $('#product-image').attr('src', product.image_path);
+        $('#product-brand').text(product.brand);
+        $('#product-model').text(product.model);
+        $('#product-size').text(product.size);
+        $('#product-color').text(product.color);
+        $('#product-price').text(product.price);
+    }
+
+    $('#logoutLink').click(function (e) {
+        e.preventDefault(); // Prevent the default link behavior
+
+        $.ajax({
+            url: 'functions/logout.inc.php',
+            type: 'GET', // or 'POST' depending on your code in logout.php
+            dataType: 'html', // Specify the expected data type
+            success: function (response) {
+                toastr.success('Logged out successfully');
+                window.location.href = 'home.php';
+            },
+            error: function (xhr, status, error) {
+                console.log('Error logging out: ', error);
+                // Handle any errors that occurred during the logout process
+            }
+        });
+    });
+
 })
 
 $('.nav-link').click(function (e) {
@@ -303,15 +432,28 @@ function updateProgressBars() {
     $('.circular-progress-bar').each(function () {
         const parentCard = $(this).parent().parent();
         const cardValue = parentCard.data('value');
-        const maxValue = 1000; // Set your maximum value here
+        const maxSalesAmount = 100000; // Change this value as needed
 
-        const percentage = (cardValue / maxValue) * 100;
+        const cardId = parentCard.attr('id');
+        let percentage;
+        if (cardId === 'totalOrders') {
+            const maxValue = 1000;
+            percentage = (cardValue / maxValue) * 100;
+        } else if (cardId === 'totalSales') {
+            percentage = (cardValue / maxSalesAmount) * 100;
+        } else if (cardId === 'amountOfStock') {
+            const maxValue = 1000;
+            percentage = (cardValue / maxValue) * 100;
+        } else if (cardId === 'totalUsers') {
+            const maxValue = 1000;
+            percentage = (cardValue / maxValue) * 100;
+        }
+
         const progressValue = $(this).find('.progress-value');
         const cardDescription = parentCard.find('.card-description');
 
         progressValue.text(`${percentage.toFixed(0)}%`);
 
-        const cardId = parentCard.attr('id');
         if (cardId === 'totalOrders') {
             cardDescription.text('Amount: ' + cardValue);
         } else if (cardId === 'totalSales') {

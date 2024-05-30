@@ -11,21 +11,30 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         $userId = $_GET['userID'];
         $user = getUserById($userId);
         die(json_encode($user));
-    }
-
-    if (isset($_GET['action']) && $_GET['action'] == 'get_users') {
+    } elseif (isset($_GET['action']) && $_GET['action'] == 'get_users') {
         $users = getAllUsers();
         die(json_encode($users));
-    } else if (isset($_GET['search'])){
+    } elseif (isset($_GET['search'])) {
         $brand = $_GET['brand'] ?? '';
         $model = $_GET['model'] ?? '';
         $products = searchProducts($brand, $model);
         die(json_encode($products));
+    } elseif (isset($_GET['action']) && $_GET['action'] === 'get_orders_and_items') {
+        $orders = getOrders();
+        $items = getOrderItems();
+        $response = [
+            'orders' => $orders,
+            'items' => $items
+        ];
+        die(json_encode($response));
+    }elseif (isset($_GET['action']) && $_GET['action'] === 'get_product_details') {
+        $shoeId = $_GET['shoeId'];
+        $product = getProductDetailsModal($shoeId);
+        die(json_encode($product));
     } else {
         $products = getAllProducts();
         die(json_encode($products));
     }
-
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -83,7 +92,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
             echo json_encode(['status' => 'error', 'message' => 'Failed to delete product.']);
         }
     }
-
-
 
 }
