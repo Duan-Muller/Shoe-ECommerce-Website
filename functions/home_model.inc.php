@@ -12,11 +12,19 @@ function getBrands()
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function getProductsByBrand($brand)
+function getProductsByBrand($brand, $gender=null)
 {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT shoe_id, brand, model, size, price, image_path FROM shoes WHERE brand = :brand GROUP BY model");
+    $query = "SELECT shoe_id, brand, model, size, price, image_path, gender FROM shoes WHERE brand = :brand";
+    if ($gender !== null) {
+        $query .= " AND gender = :gender";
+    }
+    $query .= " GROUP BY model";
+    $stmt = $pdo->prepare($query);
     $stmt->bindParam(':brand', $brand, PDO::PARAM_STR);
+    if ($gender !== null) {
+        $stmt->bindParam(':gender', $gender, PDO::PARAM_STR);
+    }
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -24,18 +32,19 @@ function getProductsByBrand($brand)
 function getProductDetails($productId)
 {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT shoe_id, brand, model, size, price, image_path, color FROM shoes WHERE shoe_id = :product_id");
+    $stmt = $pdo->prepare("SELECT shoe_id, brand, model, size, price, image_path, color, gender FROM shoes WHERE shoe_id = :product_id");
     $stmt->bindParam(':product_id', $productId, PDO::PARAM_INT);
     $stmt->execute();
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-function getProductVariants($brand, $model)
+function getProductVariants($brand, $model, $gender)
 {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT size, color, image_path FROM shoes WHERE brand = :brand AND model = :model");
+    $stmt = $pdo->prepare("SELECT size, color, image_path FROM shoes WHERE brand = :brand AND model = :model AND gender = :gender");
     $stmt->bindParam(':brand', $brand, PDO::PARAM_STR);
     $stmt->bindParam(':model', $model, PDO::PARAM_STR);
+    $stmt->bindParam(':gender', $gender, PDO::PARAM_STR);
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }

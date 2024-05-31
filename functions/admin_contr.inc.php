@@ -7,6 +7,13 @@ require_once 'admin_model.inc.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
+    if (isset($_GET['action']) && $_GET['action'] === 'search_users') {
+        $name = $_GET['name'] ?? '';
+        $surname = $_GET['surname'] ?? '';
+        $users = searchUsers($name, $surname);
+        die(json_encode($users));
+    }
+
     if (isset($_GET['action']) && $_GET['action'] === 'get_user') {
         $userId = $_GET['userID'];
         $user = getUserById($userId);

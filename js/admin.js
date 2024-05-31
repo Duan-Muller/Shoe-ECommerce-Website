@@ -33,6 +33,7 @@ $(document).ready(function () {
                                   <td>${product.price}</td>
                                   <td>${product.image_path}</td>
                                   <td>${product.quantity}</td>
+                                  <td>${product.gender}</td>
                                   <td><button class="delete-product-btn" data-product-id="${product.shoe_id}"><i class="fas fa-trash-alt"></i></button></td>  
                               </tr>`;
             $('#products-table tbody').append(row);
@@ -55,6 +56,7 @@ $(document).ready(function () {
             formData.append('price', $('#add-price').val());
             formData.append('quantity', $('#add-quantity').val());
             formData.append('product-image', $('#add-image')[0].files[0]);
+            formData.append('gender', $('#add-gender').val());
 
             $.ajax({
                 url: 'functions/admin_contr.inc.php',
@@ -91,6 +93,7 @@ $(document).ready(function () {
             // console.log('quantity input:',quantity)
             let image = $('#add-image')[0].files[0];
             // console.log('image input:',image)
+            let gender = $('#add-gender').val().trim();
 
             if (brand === ''){
                 isValid = false;
@@ -113,6 +116,9 @@ $(document).ready(function () {
             } else if (!image){
                 isValid = false;
                 alert('Please upload an image!');
+            } else if (!gender) {
+                isValid = false;
+                alert('Please select a gender!');
             }
             return isValid;
     }
@@ -185,7 +191,6 @@ $(document).ready(function () {
                 })
             }
         });
-
 
     //Ajax call to retrieve all users stored in database
     $(document).on('click', '#view-all-users', function () {
@@ -387,6 +392,7 @@ $(document).ready(function () {
         $('#product-size').text(product.size);
         $('#product-color').text(product.color);
         $('#product-price').text(product.price);
+        $('#product-gender').text(product.gender);
     }
 
     $('#logoutLink').click(function (e) {
@@ -403,6 +409,32 @@ $(document).ready(function () {
             error: function (xhr, status, error) {
                 console.log('Error logging out: ', error);
                 // Handle any errors that occurred during the logout process
+            }
+        });
+    });
+
+    $(document).on('click', '#search-user-button', function () {
+        const name = $('#search-name').val().trim();
+        const surname = $('#search-lastname').val().trim();
+
+        $.ajax({
+            url: 'functions/admin_contr.inc.php',
+            type: 'GET',
+            data: {
+                action: 'search_users',
+                name: name,
+                surname: surname
+            },
+            dataType: 'json',
+            success: function (data) {
+                updateUserTable(data);
+                toastr.success('Search Successful', 'Success');
+                $('#searchUserModal').modal('hide');
+                clearSearchFields();
+            },
+            error: function (xhr, status, error) {
+                console.log('Error searching users: ', error);
+                toastr.error('Search Unsuccessful', 'Error');
             }
         });
     });
@@ -427,6 +459,8 @@ $('.nav-link').click(function (e) {
         }
     });
 });
+
+
 
 function updateProgressBars() {
     $('.circular-progress-bar').each(function () {

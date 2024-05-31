@@ -30,7 +30,7 @@ session_start();
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="home.php">Home</a>
+                        <a class="nav-link" aria-current="page" href="home.php">Home</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -42,13 +42,12 @@ session_start();
                         <a id="register-link" class="nav-link" href="register.php">Register</a>
                     </li>
                 </ul>
-                <div class="ms-auto d-flex">
-                    <ul class="nav-item">
-                        <a class="nav-link" href="#" id="cartLink">
-                            <i class="bi bi-cart"></i> Cart
-                            <span class="badge badge-pill badge-danger" id="cartCount"></span>
-                        </a>
-                    </ul>
+                <div class="ms-auto d-flex align-items-center">
+                    <a class="nav-link cart-link" href="#" id="cartLink">
+                        <i class="bi bi-cart cart-icon"></i>
+                        <span class="cart-text">Cart</span>
+                        <span class="badge badge-pill badge-danger" id="cartCount"></span>
+                    </a>
                 </div>
             </div>
         </div>

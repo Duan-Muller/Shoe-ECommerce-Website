@@ -7,6 +7,17 @@ body {
     padding: 0px;
 }
 
+.cart-link {
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+.cart-icon {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+}
+
 .col-md-12 > h1{
 
     color: aliceblue;

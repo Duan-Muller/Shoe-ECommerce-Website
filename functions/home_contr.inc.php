@@ -11,18 +11,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         die(json_encode($brands));
     } elseif (isset($_GET['action']) && $_GET['action'] == 'get_products' && isset($_GET['brand'])) {
         $brand = $_GET['brand'];
-        $products = getProductsByBrand($brand);
+        $gender = isset($_GET['gender']) ? $_GET['gender'] : null;
+        $products = getProductsByBrand($brand, $gender);
         die(json_encode($products));
     } elseif (isset($_GET['action']) && $_GET['action'] == 'get_product_details' && isset($_GET['product_id'])) {
         $productId = $_GET['product_id'];
         $product = getProductDetails($productId);
         die(json_encode($product));
-    } elseif (isset($_GET['action']) && $_GET['action'] == 'get_product_variants' && isset($_GET['brand']) && isset($_GET['model'])) {
+    } elseif (isset($_GET['action']) && $_GET['action'] == 'get_product_variants' && isset($_GET['brand']) && isset($_GET['model']) && isset($_GET['gender'])) {
         $brand = $_GET['brand'];
         $model = $_GET['model'];
-        $variants = getProductVariants($brand, $model);
+        $gender = $_GET['gender'];
+        $variants = getProductVariants($brand, $model, $gender);
         die(json_encode($variants));
-    } elseif (isset($_GET['action']) && $_GET['action'] == 'get_user_profile') {
+    }elseif (isset($_GET['action']) && $_GET['action'] == 'get_user_profile') {
         session_start();
         if (isset($_SESSION['user_id'])) {
             $userId = $_SESSION['user_id'];

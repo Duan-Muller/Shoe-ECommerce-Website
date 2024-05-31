@@ -118,7 +118,7 @@ $(document).ready(function() {
 
             $('.dropdown-item', brandLinksDropdown).click(function(e){
                 e.preventDefault();
-                let brand = $(this).text();
+                let brand = $(this).text().replace(' (Male)', '').replace(' (Female)', '');
                 fetchProductsByBrand(brand);
             });
         }
@@ -145,17 +145,27 @@ $(document).ready(function() {
 
 });
 
-function fetchProductsByBrand(brand){
+function fetchProductsByBrand(brand, gender = null) {
+    let url = 'functions/home_contr.inc.php?action=get_products&brand=' + brand;
+
+    if (gender !== null) {
+        url += '&gender=' + gender;
+    }
+
+    console.log(gender);
 
     $.ajax({
-        url: 'functions/home_contr.inc.php?action=get_products&brand=' + brand,
+        url: url,
         type: 'GET',
         dataType: 'json',
-        success: function (data){
-            console.log(data);
+        success: function(data) {
+            console.log('Products fetched successfully');
             renderProductCards(data);
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching products:', error);
         }
-    })
+    });
 }
 
 function renderProductCards(data) {
@@ -166,17 +176,63 @@ function renderProductCards(data) {
     $('.new-releases-banner').remove();
 
     // Create the header section
-    const headerSection = $(`
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Shop ${data[0].brand}</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Slide Kicks. All the kicks you need.</p>
+    let headerSection;
+    if (data.length > 0) {
+        headerSection = $(`
+            <header class="bg-dark py-5">
+                <div class="container px-4 px-lg-5 my-5">
+                    <div class="text-center text-white">
+                        <h1 class="display-4 fw-bolder">Shop ${data[0].brand}</h1>
+                        <p class="lead fw-normal text-white-50 mb-0">Slide Kicks. All the kicks you need.</p>
+                    </div>
+                </div>
+            </header>
+        `);
+    } else {
+        headerSection = $(`
+            <header class="bg-dark py-5">
+                <div class="container px-4 px-lg-5 my-5">
+                    <div class="text-center text-white">
+                        <h1 class="display-4 fw-bolder">No Products Found</h1>
+                    </div>
+                </div>
+            </header>
+        `);
+    }
+    mainSection.append(headerSection);
+
+    // Create the gender filter section
+    const genderFilterSection = $(`
+        <div class="gender-filter my-5">
+            <div class="container">
+                <div class="card border-0 mx-auto" style="max-width: 500px;">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Filter by Gender</h5>
+                    </div>
+                    <div class="card-body d-flex justify-content-center">
+                        <div class="btn-group" role="group">
+                            <a href="#" class="btn btn-outline-dark" id="maleOption">Male</a>
+                            <a href="#" class="btn btn-outline-dark" id="femaleOption">Female</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </header>
+        </div>
     `);
-    mainSection.append(headerSection);
+    mainSection.append(genderFilterSection);
+
+    // Check if there are any products after applying the gender filter
+    if (data.length === 0) {
+        const noProductsMessage = $(`
+            <div class="container mt-5">
+                <div class="alert alert-warning" role="alert">
+                    No products found for the selected gender.
+                </div>
+            </div>
+        `);
+        mainSection.append(noProductsMessage);
+        return; // Exit the function if there are no products
+    }
 
     // Render the product section
     const productSection = $(`
@@ -213,6 +269,18 @@ function renderProductCards(data) {
         productRow.append(productCard);
     });
 
+    $('body').off('click', '#maleOption');
+    $('body').off('click', '#femaleOption');
+
+    // Event handlers for male and female options
+    $('body').on('click', '#maleOption', function(e) {
+        fetchProductsByBrand(data[0].brand, 'M');
+    });
+
+    $('body').on('click', '#femaleOption', function(e) {
+        fetchProductsByBrand(data[0].brand, 'F');
+    });
+
 }
 
 $(document).on('click', '.view-product-btn', function() {
@@ -235,9 +303,10 @@ function fetchProductDetails(productId) {
 }
 
 function showProductModal(product) {
+    const gender = product.gender;
     // Fetch all available colors and sizes for the selected product
     $.ajax({
-        url: 'functions/home_contr.inc.php?action=get_product_variants&brand=' + product.brand + '&model=' + product.model,
+        url: 'functions/home_contr.inc.php?action=get_product_variants&brand=' + product.brand + '&model=' + product.model + '&gender=' + gender,
         type: 'GET',
         dataType: 'json',
         success: function(variants) {

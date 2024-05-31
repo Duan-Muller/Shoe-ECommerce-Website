@@ -44,12 +44,12 @@ function getAllProducts() {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function addProduct($brand, $model, $size, $color, $price, $image_path, $quantity)
+function addProduct($brand, $model, $size, $color, $price, $image_path, $quantity, $gender)
 {
     global $pdo;
     try {
-        $stmt = $pdo->prepare("INSERT INTO shoes (brand, model, size, color, price, image_path, quantity) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$brand, $model, $size, $color, $price, $image_path, $quantity]);
+        $stmt = $pdo->prepare("INSERT INTO shoes (brand, model, size, color, price, image_path, quantity, gender) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$brand, $model, $size, $color, $price, $image_path, $quantity, $gender]);
         return true;
     } catch (PDOException $e) {
         return false;
@@ -131,7 +131,35 @@ function getOrderItems()
 function getProductDetailsModal($shoeId)
 {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT brand, model, size, color, price, image_path FROM shoes WHERE shoe_id = ?");
+    $stmt = $pdo->prepare("SELECT brand, model, size, color, price, image_path ,gender FROM shoes WHERE shoe_id = ?");
     $stmt->execute([$shoeId]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+function searchUsers($name = '', $surname = '')
+{
+    global $pdo;
+    $conditions = [];
+    $params = [];
+
+    $query = "SELECT id, name, surname, email, joined FROM users WHERE usertype='user'";
+
+    if (!empty($name)) {
+        $conditions[] = "name LIKE ?";
+        $params[] = "%$name%";
+    }
+
+    if (!empty($surname)) {
+        $conditions[] = "surname LIKE ?";
+        $params[] = "%$surname%";
+    }
+
+    if (!empty($conditions)) {
+        $whereClause = " AND " . implode(" AND ", $conditions);
+        $query .= $whereClause;
+    }
+
+    $stmt = $pdo->prepare($query);
+    $stmt->execute($params);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }

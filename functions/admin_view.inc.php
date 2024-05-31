@@ -101,6 +101,7 @@ function loadProductsContent(){
                                           <th scope="col">Price</th>
                                           <th scope="col">Image Path</th>
                                           <th scope="col">Quantity</th>
+                                          <th scope="col">Gender</th>
                                         </tr>
                                       </thead>
                                       <tbody></tbody>
@@ -146,9 +147,17 @@ function loadProductsContent(){
                         <input type="text" class="form-control" id="add-quantity" >
                       </div>
                       <div class="mb-3">
+                        <label for="add-gender" class="col-form-label">Gender:</label>
+                        <select class="form-control" id="add-gender">
+                            <option value="M">M</option>
+                            <option value="F">F</option>
+                        </select>
+                      </div>
+                      <div class="mb-3">
                         <label for="add-image" class="col-form-label">Image:</label>
                         <input type="file" class="form-control" id="add-image" name="add-image" >
-                      </div>
+                      </div>    
+                                      
                     </form>
                   </div>
                   <div class="modal-footer">
@@ -257,6 +266,33 @@ function loadUsersContent(){
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button id="update-user-btn" type="button" class="btn btn-primary">Update User</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="modal fade" id="searchUserModal" tabindex="-1" aria-labelledby="searchUserModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="searchUserModalLabel">Search User</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form>
+                      <div class="mb-3">
+                        <label for="search-name" class="col-form-label">First Name:</label>
+                        <input type="text" class="form-control" id="search-name" >
+                      </div>
+                      <div class="mb-3">
+                        <label for="search-lastname" class="col-form-label">Last Name:</label>
+                        <input type="text" class="form-control" id="search-lastname" >
+                      </div>                                                                                      
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="search-user-button" type="button" class="btn btn-primary">Search User</button>
                   </div>
                 </div>
               </div>
@@ -379,6 +415,7 @@ function loadOrdersContent(){
                                     <h5>Size: <span id="product-size"></span></h5>
                                     <h5>Color: <span id="product-color"></span></h5>
                                     <h5>Price: <span id="product-price"></span></h5>
+                                    <h5>Gender: <span id="product-gender"></span></h5>
                                 </div>
                             </div>
                         </div>
