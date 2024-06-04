@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-
+session_start();
 function is_input_empty(string $firstname, string $email, string $pwd)
 {
     if (empty($firstname) || empty($email) || empty($pwd)) {
@@ -27,7 +27,14 @@ function is_password_wrong(string $pwd, string $hashedPwd)
 
 function get_user_firstname()
 {
-    session_start();
+    if (Session_status() === PHP_SESSION_NONE) {
+        file_put_contents('nosession.txt', print_r($_SESSION, true));
+    } else if (Session_status() === PHP_SESSION_ACTIVE) {
+        file_put_contents('sessionactive.txt', print_r($_SESSION, true));
+    } else  {
+        file_put_contents('sessiondisabled.txt', print_r($_SESSION, true));
+    }
+    file_put_contents('log.txt', print_r($_SESSION, true));
     echo $_SESSION['user_firstname'] ?? '';
 }
 

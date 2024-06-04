@@ -10,6 +10,6 @@ function get_user(object $pdo, string $firstname, string $email){
     $stmt->execute();
 
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
+    $pdo = null;
     return $result;
 }

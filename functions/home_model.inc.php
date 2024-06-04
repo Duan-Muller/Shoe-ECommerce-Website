@@ -9,6 +9,7 @@ function getBrands()
     global $pdo;
     $stmt = $pdo->prepare("SELECT DISTINCT brand FROM shoes");
     $stmt->execute();
+    $pdo = null;
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
@@ -26,6 +27,7 @@ function getProductsByBrand($brand, $gender=null)
         $stmt->bindParam(':gender', $gender, PDO::PARAM_STR);
     }
     $stmt->execute();
+    $pdo = null;
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
@@ -35,17 +37,19 @@ function getProductDetails($productId)
     $stmt = $pdo->prepare("SELECT shoe_id, brand, model, size, price, image_path, color, quantity, gender FROM shoes WHERE shoe_id = :product_id");
     $stmt->bindParam(':product_id', $productId, PDO::PARAM_INT);
     $stmt->execute();
+    $pdo = null;
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
 function getProductVariants($brand, $model, $gender)
 {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT size, color, image_path FROM shoes WHERE brand = :brand AND model = :model AND gender = :gender");
+    $stmt = $pdo->prepare("SELECT shoe_id, size, color, image_path FROM shoes WHERE brand = :brand AND model = :model AND gender = :gender");
     $stmt->bindParam(':brand', $brand, PDO::PARAM_STR);
     $stmt->bindParam(':model', $model, PDO::PARAM_STR);
     $stmt->bindParam(':gender', $gender, PDO::PARAM_STR);
     $stmt->execute();
+    $pdo = null;
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
@@ -62,6 +66,7 @@ function addToCart($userId, $productId, $color, $size, $price, $quantity, $image
     $stmt->bindParam(5, $price, PDO::PARAM_STR);
     $stmt->bindParam(6, $quantity, PDO::PARAM_INT);
     $stmt->bindParam(7, $imagePath, PDO::PARAM_STR);
+    $pdo = null;
     return $stmt->execute();
 }
 
@@ -73,7 +78,7 @@ function removeFromCart($userId, $cartId)
     $stmt = $pdo->prepare("DELETE FROM cart_items WHERE cart_id = :cartId AND user_id = :userId");
     $stmt->bindValue(':cartId', $cartId, PDO::PARAM_INT);
     $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
-
+    $pdo = null;
     return $stmt->execute();
 }
 
@@ -86,7 +91,7 @@ function getCartItems($userId)
     $stmt->bindValue(1, $userId, PDO::PARAM_INT);
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+    $pdo = null;
     return $result;
 }
 
@@ -99,7 +104,7 @@ function getCartCount($userId)
     $stmt->bindValue(1, $userId, PDO::PARAM_INT);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
+    $pdo = null;
     return $result['cart_count'];
 }
 
@@ -110,7 +115,7 @@ function clearCart($userId)
     // Delete all items from the cart for the user
     $stmt = $pdo->prepare("DELETE FROM cart_items WHERE user_id = ?");
     $stmt->bindValue(1, $userId, PDO::PARAM_INT);
-
+    $pdo = null;
     return $stmt->execute();
 }
 
@@ -120,6 +125,7 @@ function getUserProfile($userId)
     $stmt = $pdo->prepare("SELECT name, surname, email FROM users WHERE id = :userId");
     $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
     $stmt->execute();
+    $pdo = null;
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
@@ -142,4 +148,5 @@ function updateProductQuantity($productId, $purchasedQuantity)
     $updateStmt->bindParam(':new_quantity', $newQuantity, PDO::PARAM_INT);
     $updateStmt->bindParam(':product_id', $productId, PDO::PARAM_INT);
     $updateStmt->execute();
+    $pdo = null;
 }

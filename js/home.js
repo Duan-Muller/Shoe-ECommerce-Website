@@ -2,15 +2,16 @@ function fetchUserFirstName(){
     fetch('functions/login_contr.inc.php?action=get_user_firstname')
         .then(response => response.text())
         .then(userFirstName => {
+            console.log(userFirstName)
             updateNavbar(userFirstName);
         })
         .catch(error => {
             console.error('Error:', error);
+            console.log("Hello")
         })
 }
 
 function updateNavbar(userFirstName) {
-    console.log(userFirstName);
     if (userFirstName !== '' && userFirstName !== undefined && userFirstName !== null) {
         $('#register-link').html(`Welcome ${userFirstName}`).attr('href', '#');
     } else {
@@ -103,6 +104,34 @@ function clearCart(event) {
 }
 
 $(document).ready(function() {
+
+    $('.feature-box').on('click', function() {
+        const featureText = $(this).find('h5').text().toLowerCase();
+        let targetSectionClass;
+
+        switch (featureText) {
+            case 'free shipping':
+                targetSectionClass = '.free-shipping';
+                break;
+            case '30 days return':
+                targetSectionClass = '.30-days-return';
+                break;
+            case 'contact us!':
+                targetSectionClass = '.contact-us';
+                break;
+            default:
+                return;
+        }
+
+        const targetSection = $(targetSectionClass);
+
+        if (targetSection.length) {
+            $('html, body').animate({
+                scrollTop: targetSection.offset().top
+            }, 1000);
+        }
+    });
+
     fetchUserFirstName()
 
     $.ajax({
@@ -311,6 +340,7 @@ function showProductModal(product) {
         type: 'GET',
         dataType: 'json',
         success: function(variants) {
+            console.log('Variants',variants);
             const modal = $(`
                 <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -387,8 +417,11 @@ function showProductModal(product) {
                         $('#addToCartBtn').prop('disabled', false);
                         $('#addToCartBtn').text('Add to Cart');
                         $('#addToCartBtn').on('click', function() {
-                            console.log(product.shoe_id, $('#colorSelect').val(), $('#sizeSelect').val(), $('#quantityInput').val());
-                            addToCart(product.shoe_id, $('#colorSelect').val(), $('#sizeSelect').val(), product.price, $('#quantityInput').val(), $('#productImage').attr('src'));
+                            const selectedVariant = variants.find(variant => variant.color === $('#colorSelect').val() && variant.size === $('#sizeSelect').val());
+                            const variantShoeID = selectedVariant.shoe_id;
+
+                            console.log(variantShoeID, $('#colorSelect').val(), $('#sizeSelect').val(), $('#quantityInput').val());
+                            addToCart(variantShoeID, $('#colorSelect').val(), $('#sizeSelect').val(), product.price, $('#quantityInput').val(), $('#productImage').attr('src'));
                         });
                     } else {
                         // User is not logged in, disable the "Add to Cart" button
@@ -695,28 +728,28 @@ function showPaymentModal() {
                                     <h6><strong>Billing Info</strong></h6>
                                     <div class="form-group">
                                         <label for="fullNameInput">Full Name:</label>
-                                        <input type="text" class="form-control" id="fullNameInput" placeholder="Enter Your Full Name">
+                                        <input type="text" class="form-control" id="fullNameInput" placeholder="Enter Your Full Name" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="emailInput">Email:</label>
-                                        <input type="email" class="form-control" id="emailInput" placeholder="Enter Email Address">
+                                        <input type="email" class="form-control" id="emailInput" placeholder="Enter Email Address" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="addressInput">Address:</label>
-                                        <textarea class="form-control" id="addressInput" rows="3" placeholder="Enter Address"></textarea>
+                                        <textarea class="form-control" id="addressInput" rows="3" placeholder="Enter Address" required></textarea>
                                     </div>
                                     <div class="form-row">
                                         <div class="col">
                                             <label for="cityInput">City:</label>
-                                            <input type="text" class="form-control" id="cityInput" placeholder="Enter City">
+                                            <input type="text" class="form-control" id="cityInput" placeholder="Enter City" required>
                                         </div>
                                         <div class="col">
                                             <label for="provinceInput">Province:</label>
-                                            <input type="text" class="form-control" id="provinceInput" placeholder="Enter Province">
+                                            <input type="text" class="form-control" id="provinceInput" placeholder="Enter Province" required>
                                         </div>
                                         <div class="col">
                                             <label for="zipInput">Zip Code:</label>
-                                            <input type="text" class="form-control" id="zipInput" placeholder="123456">
+                                            <input type="text" class="form-control" id="zipInput" placeholder="123456" required>
                                         </div>
                                     </div>
                                 </div>
@@ -733,12 +766,12 @@ function showPaymentModal() {
                                     </div>
                                     <div class="form-group">
                                         <label for="cardNumberInput">Credit Card Number:</label>
-                                        <input type="text" class="form-control" id="cardNumberInput" placeholder="**** **** **** 4444">
+                                        <input type="text" class="form-control" id="cardNumberInput" placeholder="**** **** **** 4444" required>
                                     </div>
                                     <div class="form-row">
                                         <div class="col">
                                             <label for="expiryMonthInput">Exp Month:</label>
-                                            <select class="form-control" id="expiryMonthInput">
+                                            <select class="form-control" id="expiryMonthInput" required>
                                                 <option value="">Choose Month</option>
                                                 <option value="01">01</option>
                                                 <option value="02">02</option>
@@ -756,7 +789,7 @@ function showPaymentModal() {
                                         </div>
                                         <div class="col">
                                             <label for="expiryYearInput">Exp Year:</label>
-                                            <select class="form-control" id="expiryYearInput">
+                                            <select class="form-control" id="expiryYearInput" required>
                                                 <option value="">Choose Year</option>
                                                 <option value="2023">2023</option>
                                                 <option value="2024">2024</option>
@@ -769,7 +802,7 @@ function showPaymentModal() {
                                         </div>
                                         <div class="col">
                                             <label for="cvvInput">CVV:</label>
-                                            <input type="text" class="form-control" id="cvvInput" placeholder="123">
+                                            <input type="text" class="form-control" id="cvvInput" placeholder="123" required>
                                         </div>
                                     </div>
                                 </div>
@@ -789,70 +822,82 @@ function showPaymentModal() {
     $('#paymentModal').modal('show');
 
     // Handle payment submission
-    $('#confirmPaymentBtn').on('click', function() {
-        // Retrieve the form data
-        const fullName = $('#fullNameInput').val();
-        const email = $('#emailInput').val();
-        const address = $('#addressInput').val();
-        const city = $('#cityInput').val();
-        const province = $('#provinceInput').val();
-        const zipCode = $('#zipInput').val();
+    $('#confirmPaymentBtn').on('click', function(e) {
+        e.preventDefault();
 
-        // Retrieve the cart items
-        $.ajax({
-            url: 'functions/home_contr.inc.php',
-            type: 'POST',
-            data: {
-                action: 'get_cart_items'
-            },
-            success: function(cartItemsData) {
-                const cartItems = JSON.parse(cartItemsData);
+        const requiredFields = $('#paymentForm input:required, #paymentForm textarea:required, #paymentForm select:required');
+        let allFieldsFilled = true;
 
-                // Calculate the total price
-                let totalPrice = 0;
-                cartItems.forEach(item => {
-                    totalPrice += item.price * item.quantity;
+        requiredFields.each(function() {
+            if ($(this).val() === '') {
+                allFieldsFilled = false;
+                return false; // Exit the loop early
+            }
+        });
 
-                    const productId = item.shoe_id;
-                    const purchasedQuantity = item.quantity;
+        if (allFieldsFilled) {
+            // Retrieve the form data
+            const fullName = $('#fullNameInput').val();
+            const email = $('#emailInput').val();
+            const address = $('#addressInput').val();
+            const city = $('#cityInput').val();
+            const province = $('#provinceInput').val();
+            const zipCode = $('#zipInput').val();
 
+            $.ajax({
+                url: 'functions/home_contr.inc.php',
+                type: 'POST',
+                data: {
+                    action: 'get_cart_items'
+                },
+                success: function(cartItemsData) {
+                    const cartItems = JSON.parse(cartItemsData);
+
+                    // Calculate the total price
+                    let totalPrice = 0;
+                    cartItems.forEach(item => {
+                        totalPrice += item.price * item.quantity;
+
+                        const productId = item.shoe_id;
+                        const purchasedQuantity = item.quantity;
+
+                        $.ajax({
+                            url: 'functions/home_contr.inc.php',
+                            type: 'POST',
+                            data: {
+                                action: 'update_product_quantity',
+                                product_id: productId,
+                                purchased_quantity: purchasedQuantity
+                            },
+                            success: function(response) {
+                                console.log('Product quantity updated:', response);
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error updating product quantity:', error);
+                            }
+                        });
+                    });
+
+                    // Send the order data to the server
                     $.ajax({
-                        url: 'functions/home_contr.inc.php',
+                        url: 'functions/process_order_contr.inc.php',
                         type: 'POST',
                         data: {
-                            action: 'update_product_quantity',
-                            product_id: productId,
-                            purchased_quantity: purchasedQuantity
+                            fullName: fullName,
+                            email: email,
+                            address: address,
+                            city: city,
+                            province: province,
+                            zipCode: zipCode,
+                            totalPrice: totalPrice,
+                            cartItems: JSON.stringify(cartItems)
                         },
                         success: function(response) {
-                            console.log('Product quantity updated:', response);
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error updating product quantity:', error);
-                        }
-                    });
-                });
-
-                // Send the order data to the server
-                $.ajax({
-                    url: 'functions/process_order_contr.inc.php',
-                    type: 'POST',
-                    data: {
-                        fullName: fullName,
-                        email: email,
-                        address: address,
-                        city: city,
-                        province: province,
-                        zipCode: zipCode,
-                        totalPrice: totalPrice,
-                        cartItems: JSON.stringify(cartItems)
-                    },
-                    success: function(response) {
-                        // Handle successful order placement
-                        $('#paymentModal').modal('hide');
+                            // Handle successful order placement
+                            $('#paymentModal').modal('hide');
 
 
-                        const thankYouModal = $(`
+                            const thankYouModal = $(`
                                     <div class="modal fade" id="thankYouModal" tabindex="-1" role="dialog" aria-labelledby="thankYouModalLabel" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
@@ -870,24 +915,29 @@ function showPaymentModal() {
                                     </div>
                         `);
 
-                        $('body').append(thankYouModal);
-                        $('#thankYouModal').modal('show');
+                            $('body').append(thankYouModal);
+                            $('#thankYouModal').modal('show');
 
-                        // Handle the "Back to Home" button click
-                        $('#homeRedirectBtn').on('click', function() {
-                            window.location.href = 'home.php';
-                        });
-                    },
-                    error: function(xhr, status, error) {
-                        // Handle order placement error
-                        console.error('Order error:', error);
-                        // Show an error message to the user
-                    }
-                });
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);
-            }
-        });
+                            // Handle the "Back to Home" button click
+                            $('#homeRedirectBtn').on('click', function() {
+                                window.location.href = 'home.php';
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            // Handle order placement error
+                            console.error('Order error:', error);
+                            // Show an error message to the user
+                        }
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+
+        } else {
+            // Show an error message to the user
+            alert('Please fill out all required fields.');
+        }
     });
 }

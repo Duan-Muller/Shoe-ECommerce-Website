@@ -1,9 +1,5 @@
 <?php
-
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
-
+ob_start();
 ini_set('display_startup_errors', 1);
 ini_set('display_errors', 1);
 error_reporting(-1);
@@ -54,6 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION["user_firstname"] = htmlspecialchars($result["name"]);
 
         if (!empty($_SESSION['user_firstname'])){
+            file_put_contents('login.txt', print_r($_SESSION, true));
             setcookie("firstname", $_SESSION['user_firstname'], 0, "/");
         } else {
             setcookie("firstname", "", 0, "/");

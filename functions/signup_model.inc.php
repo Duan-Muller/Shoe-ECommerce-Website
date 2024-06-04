@@ -8,6 +8,7 @@ function get_name(object $pdo, string $firstname){
     $stmt->bindParam(":name", $firstname);
     $stmt->execute();
 
+    $pdo = null;
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     return $result;
@@ -19,6 +20,7 @@ function get_lastname(object $pdo, string $lastname){
     $stmt->bindParam(":surname", $lastname);
     $stmt->execute();
 
+    $pdo = null;
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     return $result;
@@ -30,6 +32,7 @@ function get_email(object $pdo, string $email){
     $stmt->bindParam(":email", $email);
     $stmt->execute();
 
+    $pdo = null;
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     return $result;
@@ -47,4 +50,7 @@ function set_user(object $pdo, string $firstname, string $lastname, string $emai
     $stmt->bindParam(":email", $email);
     $stmt->bindParam(":password", $hashedPassword);
     $stmt->execute();
+
+    $pdo = null;
+    $stmt = null;
 }
