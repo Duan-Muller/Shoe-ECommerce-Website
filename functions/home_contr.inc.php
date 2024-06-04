@@ -40,6 +40,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             die(json_encode(['error' => 'Unauthorized']));
         }
     }
+
+    if (isset($_POST['action']) && $_POST['action'] == 'update_product_quantity') {
+        $productId = $_POST['product_id'];
+        $purchasedQuantity = $_POST['purchased_quantity'];
+
+        updateProductQuantity($productId, $purchasedQuantity);
+    }
+
 } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['action']) && $_POST['action'] == 'add_to_cart') {
         // Check if the user is logged in and authenticated

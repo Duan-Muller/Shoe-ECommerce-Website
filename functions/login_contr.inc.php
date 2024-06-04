@@ -11,13 +11,9 @@ function is_input_empty(string $firstname, string $email, string $pwd)
     }
 }
 
-function is_username_wrong(bool|array $result)
+function is_username_wrong($result): bool
 {
-    if (!$result) {
-        return true;
-    } else {
-        return false;
-    }
+    return !$result;
 }
 
 function is_password_wrong(string $pwd, string $hashedPwd)

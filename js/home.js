@@ -304,6 +304,7 @@ function fetchProductDetails(productId) {
 
 function showProductModal(product) {
     const gender = product.gender;
+    const currentQuantity = product.quantity;
     // Fetch all available colors and sizes for the selected product
     $.ajax({
         url: 'functions/home_contr.inc.php?action=get_product_variants&brand=' + product.brand + '&model=' + product.model + '&gender=' + gender,
@@ -811,6 +812,25 @@ function showPaymentModal() {
                 let totalPrice = 0;
                 cartItems.forEach(item => {
                     totalPrice += item.price * item.quantity;
+
+                    const productId = item.shoe_id;
+                    const purchasedQuantity = item.quantity;
+
+                    $.ajax({
+                        url: 'functions/home_contr.inc.php',
+                        type: 'POST',
+                        data: {
+                            action: 'update_product_quantity',
+                            product_id: productId,
+                            purchased_quantity: purchasedQuantity
+                        },
+                        success: function(response) {
+                            console.log('Product quantity updated:', response);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error updating product quantity:', error);
+                        }
+                    });
                 });
 
                 // Send the order data to the server

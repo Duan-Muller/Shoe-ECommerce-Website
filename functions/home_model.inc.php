@@ -32,7 +32,7 @@ function getProductsByBrand($brand, $gender=null)
 function getProductDetails($productId)
 {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT shoe_id, brand, model, size, price, image_path, color, gender FROM shoes WHERE shoe_id = :product_id");
+    $stmt = $pdo->prepare("SELECT shoe_id, brand, model, size, price, image_path, color, quantity, gender FROM shoes WHERE shoe_id = :product_id");
     $stmt->bindParam(':product_id', $productId, PDO::PARAM_INT);
     $stmt->execute();
     return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -117,8 +117,29 @@ function clearCart($userId)
 function getUserProfile($userId)
 {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT name, surname, surname, email FROM users WHERE id = ?");
-    $stmt->bindValue(1, $userId, PDO::PARAM_INT);
+    $stmt = $pdo->prepare("SELECT name, surname, email FROM users WHERE id = :userId");
+    $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
     $stmt->execute();
     return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+function updateProductQuantity($productId, $purchasedQuantity)
+{
+    global $pdo;
+
+    // Get the current quantity of the product
+    $stmt = $pdo->prepare("SELECT quantity FROM shoes WHERE shoe_id = :product_id");
+    $stmt->bindParam(':product_id', $productId, PDO::PARAM_INT);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    $currentQuantity = $result['quantity'];
+
+    // Calculate the new quantity
+    $newQuantity = $currentQuantity - $purchasedQuantity;
+
+    // Update the quantity in the database
+    $updateStmt = $pdo->prepare("UPDATE shoes SET quantity = :new_quantity WHERE shoe_id = :product_id");
+    $updateStmt->bindParam(':new_quantity', $newQuantity, PDO::PARAM_INT);
+    $updateStmt->bindParam(':product_id', $productId, PDO::PARAM_INT);
+    $updateStmt->execute();
 }
