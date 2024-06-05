@@ -1,6 +1,7 @@
 <?php
-
-declare(strict_types=1);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 require_once 'database_connection.inc.php';
 require_once 'admin_model.inc.php';
@@ -71,9 +72,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         $price = $_POST['price'];
         $quantity = $_POST['quantity'];
         $imagePath = uploadImage($_FILES['product-image']);
+        $gender = $_POST['gender'];
 
         if ($imagePath !== false) {
-            $result = addProduct($brand, $model, $size, $color, $price, $imagePath, $quantity);
+            $result = addProduct($brand, $model, $size, $color, $price, $imagePath, $quantity, $gender);
 
             if ($result) {
                 echo json_encode(['status' => 'success', 'message' => 'Product added successfully.']);

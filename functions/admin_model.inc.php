@@ -1,5 +1,7 @@
 <?php
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 require_once 'database_connection.inc.php';
 
 function getTotalStock(){
@@ -48,7 +50,7 @@ function addProduct($brand, $model, $size, $color, $price, $image_path, $quantit
 {
     global $pdo;
     try {
-        $stmt = $pdo->prepare("INSERT INTO shoes (brand, model, size, color, price, image_path, quantity, gender) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO shoes (brand, model, size, color, price, image_path, quantity, gender) VALUES (?, ?, ?, ?, ?, ?, ?,?)");
         $stmt->execute([$brand, $model, $size, $color, $price, $image_path, $quantity, $gender]);
         return true;
     } catch (PDOException $e) {
@@ -57,16 +59,16 @@ function addProduct($brand, $model, $size, $color, $price, $image_path, $quantit
 
 }
 
-function uploadImage($file){
-    $uploadDir = 'img/';
+function uploadImage($file) {
+    $uploadDir = '/home/slidekgx/public_html/img/';
     $uploadFile = $uploadDir . basename($file['name']);
 
-    if (!move_uploaded_file($file['tmp_name'], $uploadFile)) {
+    if (move_uploaded_file($file['tmp_name'], $uploadFile)) {
+        return 'img/' . basename($file['name']);
+    } else {
         error_log("Failed to move uploaded file: " . $file['tmp_name'] . " to " . $uploadFile . ". Error: " . error_get_last()['message']);
         return false;
     }
-
-    return $uploadFile;
 }
 
 function searchProducts($brand, $model){
