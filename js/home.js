@@ -358,7 +358,7 @@ function showProductModal(product) {
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="sizeSelect">Size:</label>
+                                    <label for="sizeSelect">Available Sizes:</label>
                                     <select class="form-control" id="sizeSelect">
                                         ${getAvailableSizes(variants, variants[0].color).map(size => `<option value="${size}">${size}</option>`).join('')}
                                     </select>
