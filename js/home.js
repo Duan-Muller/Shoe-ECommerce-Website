@@ -35,7 +35,7 @@ function fetchUserProfile() {
 
 function renderUserProfile(userProfile) {
     const mainSection = $('main');
-    mainSection.empty(); // Clear the existing content
+    mainSection.empty(); // Clearing the existing content
 
     const headerSection = $(`
         <header class="bg-dark py-5">
@@ -383,7 +383,6 @@ function showProductModal(product) {
             modal.on('click', function(e) {
                 const modalContent = $('.modal-content');
                 if (!modalContent.is(e.target) && modalContent.has(e.target).length === 0) {
-                    // Click occurred outside the modal content area
                     $('#productModal').modal('hide');
                     $('#productModal').remove();
                 }
@@ -647,7 +646,6 @@ function showCheckoutModal(cartItems) {
                         <h5 class="modal-title" id="checkoutModalLabel">Cart Summary</h5>
                     </div>
                     <div class="modal-body">
-                        <!-- Cart summary goes here -->
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" id="confirmCheckoutBtn">Confirm Checkout</button>
@@ -811,7 +809,7 @@ function showPaymentModal() {
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success btn-block" id="confirmPaymentBtn">Confirm Payment</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelPaymentBtn">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -820,6 +818,10 @@ function showPaymentModal() {
 
     $('body').append(modal);
     $('#paymentModal').modal('show');
+
+    $('#cancelPaymentBtn').on('click', function() {
+        $('#paymentModal').modal('hide');
+    });
 
     // Handle payment submission
     $('#confirmPaymentBtn').on('click', function(e) {

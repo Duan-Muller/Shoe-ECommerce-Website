@@ -1,5 +1,5 @@
 $(document).ready(function () {
-
+    //updating progress bars on page load
     updateProgressBars();
 
     $(document).on('click', '#view-all-products', function () {
@@ -19,7 +19,7 @@ $(document).ready(function () {
             }
         });
     }
-
+    //updating shoes table with db data
     function updateTable(products) {
         $('#products-table tbody').empty();
 
@@ -35,6 +35,7 @@ $(document).ready(function () {
                                   <td>${product.quantity}</td>
                                   <td>${product.gender}</td>
                                   <td><button class="delete-product-btn" data-product-id="${product.shoe_id}"><i class="fas fa-trash-alt"></i></button></td>  
+                                  <td><button class="edit-product-btn" data-product-id="${product.shoe_id}"><i class="fas fa-pencil-alt"></i></button></td>
                               </tr>`;
             $('#products-table tbody').append(row);
         })
@@ -76,7 +77,7 @@ $(document).ready(function () {
                 }
             })
     })
-
+    //ensuring the add product form is filled in
     function validateForm(){
             let isValid = true;
             let brand = $('#add-brand').val().trim();
@@ -122,7 +123,7 @@ $(document).ready(function () {
             }
             return isValid;
     }
-
+    //clearing form field on successful add of product
     function clearFormFields(){
             $('#add-brand').val('');
             $('#add-model').val('');
@@ -137,7 +138,7 @@ $(document).ready(function () {
     $(document).on('click','#search-product-button',function (){
         searchProducts();
     });
-
+    //ajax call to search products based on user input
     function searchProducts(){
         let brand = $('#search-brand').val().trim();
         let model = $('#search-model').val().trim();
@@ -163,12 +164,12 @@ $(document).ready(function () {
                 }
         })
     }
-
+    //clearing search fields after searching
     function clearSearchFields(){
         $('#search-brand').val('');
         $('#search-model').val('');
     }
-
+    //ajax call to delete product
     $(document).on('click', '.delete-product-btn', function () {
         const productId = $(this).data('product-id');
 
@@ -210,7 +211,7 @@ $(document).ready(function () {
             }
         });
     }
-
+    //updating user table after data has been retrieved
     function updateUserTable(users) {
         $('#users-table tbody').empty();
 
@@ -226,7 +227,7 @@ $(document).ready(function () {
             $('#users-table tbody').append(row);
         })
     }
-
+    //event handler for edit user button to populate modal with selected user's data
     $(document).on('click', '.edit-user-btn', function () {
         const userId = $(this).data('user-id');
         const updateUserBtn = $('#update-user-btn');
@@ -253,7 +254,7 @@ $(document).ready(function () {
             }
         });
     });
-
+    //ajax call to add updates to db
     $(document).on('click','#update-user-btn',function (){
         const userId = $(this).data('user-id');
         const name = $('#edit-name').val().trim();
@@ -396,19 +397,19 @@ $(document).ready(function () {
     }
 
     $('#logoutLink').click(function (e) {
-        e.preventDefault(); // Prevent the default link behavior
+        e.preventDefault();
 
         $.ajax({
             url: 'functions/logout.inc.php',
-            type: 'GET', // or 'POST' depending on your code in logout.php
-            dataType: 'html', // Specify the expected data type
+            type: 'GET',
+            dataType: 'html',
             success: function (response) {
                 toastr.success('Logged out successfully');
                 window.location.href = 'home.php';
             },
             error: function (xhr, status, error) {
                 console.log('Error logging out: ', error);
-                // Handle any errors that occurred during the logout process
+
             }
         });
     });
@@ -439,6 +440,69 @@ $(document).ready(function () {
         });
     });
 
+    $(document).on('click', '.edit-product-btn', function () {
+        const productId = $(this).data('product-id');
+        const updateProductBtn = $('#update-product-btn');
+        updateProductBtn.data('product-id', productId);
+
+        $.ajax({
+            url: 'functions/admin_contr.inc.php',
+            type: 'GET',
+            data: {
+                action: 'get_product_details',
+                shoeId: productId
+            },
+            dataType: 'json',
+            success: function (data) {
+                $('#edit-brand').val(data.brand);
+                $('#edit-model').val(data.model);
+                $('#edit-size').val(data.size);
+                $('#edit-color').val(data.color);
+                $('#edit-price').val(data.price);
+                $('#edit-quantity').val(data.quantity);
+                $('#editProductModal').modal('show');
+            },
+            error: function (xhr, status, error) {
+                console.log('Error fetching product: ', error);
+                toastr.error('Failed to fetch product data', 'Error');
+            }
+        });
+    });
+
+    $(document).on('click', '#update-product-btn', function () {
+        const productId = $(this).data('product-id');
+        const brand = $('#edit-brand').val().trim();
+        const model = $('#edit-model').val().trim();
+        const size = $('#edit-size').val().trim();
+        const color = $('#edit-color').val().trim();
+        const price = $('#edit-price').val().trim();
+        const quantity = $('#edit-quantity').val().trim();
+
+        $.ajax({
+            url: 'functions/admin_contr.inc.php',
+            type: 'POST',
+            data: {
+                action: 'update_product',
+                productId: productId,
+                brand: brand,
+                model: model,
+                size: size,
+                color: color,
+                price: price,
+                quantity: quantity
+            },
+            success: function (response) {
+                fetchProducts(); // Refresh the products table
+                $('#editProductModal').modal('hide');
+                toastr.success('Product updated successfully', 'Success');
+            },
+            error: function (xhr, status, error) {
+                console.log('Error updating product: ', error);
+                toastr.error('Failed to update product', 'Error');
+            }
+        });
+    });
+
 })
 
 $('.nav-link').click(function (e) {
@@ -459,14 +523,12 @@ $('.nav-link').click(function (e) {
         }
     });
 });
-
-
-
+//function to update progress bars based on DB data
 function updateProgressBars() {
     $('.circular-progress-bar').each(function () {
         const parentCard = $(this).parent().parent();
         const cardValue = parentCard.data('value');
-        const maxSalesAmount = 100000; // Change this value as needed
+        const maxSalesAmount = 100000;
 
         const cardId = parentCard.attr('id');
         let percentage;

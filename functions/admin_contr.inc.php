@@ -100,6 +100,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
             http_response_code(500);
             echo json_encode(['status' => 'error', 'message' => 'Failed to delete product.']);
         }
+
+    } elseif (isset($_POST['action']) && $_POST['action'] === 'update_product') {
+        $productId = $_POST['productId'];
+        $brand = $_POST['brand'];
+        $model = $_POST['model'];
+        $size = $_POST['size'];
+        $color = $_POST['color'];
+        $price = $_POST['price'];
+        $quantity = $_POST['quantity'];
+
+        $result = updateProduct($productId, $brand, $model, $size, $color, $price, $quantity);
+
+        if ($result) {
+            echo json_encode(['status' => 'success', 'message' => 'Product updated successfully.']);
+        } else {
+            http_response_code(500);
+            echo json_encode(['status' => 'error', 'message' => 'Failed to update product.']);
+        }
     }
 
 }

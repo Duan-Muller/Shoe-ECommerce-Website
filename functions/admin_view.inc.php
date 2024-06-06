@@ -195,6 +195,49 @@ function loadProductsContent(){
               </div>
             </div>     
             
+            <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="editProductModalLabel">Edit Product</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label for="edit-brand" class="col-form-label">Brand:</label>
+                                    <input type="text" class="form-control" id="edit-brand">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit-model" class="col-form-label">Model:</label>
+                                    <input type="text" class="form-control" id="edit-model">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit-size" class="col-form-label">Size:</label>
+                                    <input type="text" class="form-control" id="edit-size">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit-color" class="col-form-label">Color:</label>
+                                    <input type="text" class="form-control" id="edit-color">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit-price" class="col-form-label">Price:</label>
+                                    <input type="text" class="form-control" id="edit-price">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit-quantity" class="col-form-label">Quantity:</label>
+                                    <input type="text" class="form-control" id="edit-quantity">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button id="update-product-btn" type="button" class="btn btn-primary">Update Product</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             ';
 }
 

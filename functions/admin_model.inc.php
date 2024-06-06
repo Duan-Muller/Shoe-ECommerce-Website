@@ -133,7 +133,7 @@ function getOrderItems()
 function getProductDetailsModal($shoeId)
 {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT brand, model, size, color, price, image_path ,gender FROM shoes WHERE shoe_id = ?");
+    $stmt = $pdo->prepare("SELECT brand, model, size, color, price, image_path ,gender, quantity FROM shoes WHERE shoe_id = ?");
     $stmt->execute([$shoeId]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
@@ -164,4 +164,16 @@ function searchUsers($name = '', $surname = '')
     $stmt = $pdo->prepare($query);
     $stmt->execute($params);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function updateProduct($productId, $brand, $model, $size, $color, $price, $quantity)
+{
+    global $pdo;
+    try {
+        $stmt = $pdo->prepare("UPDATE shoes SET brand = ?, model = ?, size = ?, color = ?, price = ?, quantity = ? WHERE shoe_id = ?");
+        $stmt->execute([$brand, $model, $size, $color, $price, $quantity, $productId]);
+        return true;
+    } catch (PDOException $e) {
+        return false;
+    }
 }
