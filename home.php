@@ -19,7 +19,7 @@ session_start();
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary navbar-fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
                 <img src = "img/logo2.jpg" width="60" height="60">
@@ -184,7 +184,6 @@ session_start();
 
     </div>
 </main>
-
 <footer class="py-5 bg-dark">
     <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Slide Kicks 2024</p></div>
 </footer>
